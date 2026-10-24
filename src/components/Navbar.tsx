@@ -9,6 +9,7 @@ import {
   Terminal,
   Sparkles,
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { ThemeMode } from '../types';
 
 interface NavbarProps {
@@ -32,7 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin }) => {
   // Monitor scroll for sticky shadow & active link
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 30) {
+      if (window.scrollY > 25) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
@@ -48,9 +49,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin }) => {
         'education',
         'certifications',
         'focus',
+        'faq',
         'contact',
       ];
-      const scrollPos = window.scrollY + 120;
+      const scrollPos = window.scrollY + 140;
 
       for (const sectionId of sections) {
         const el = document.getElementById(sectionId);
@@ -78,6 +80,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin }) => {
     { id: 'education', label: 'Education' },
     { id: 'certifications', label: 'Certs' },
     { id: 'focus', label: 'Focus' },
+    { id: 'faq', label: 'FAQ' },
     { id: 'contact', label: 'Contact' },
   ];
 
@@ -117,14 +120,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin }) => {
 
       <header
         style={{
-          backgroundColor: isScrolled ? 'var(--bg-card)' : 'transparent',
+          backgroundColor: isScrolled ? 'rgba(11, 13, 18, 0.85)' : 'transparent',
           borderColor: isScrolled ? 'var(--border-color)' : 'transparent',
         }}
         className={`fixed left-0 right-0 z-40 transition-all duration-300 ${
           isPreviewMode ? 'top-8' : 'top-0'
         } ${
           isScrolled
-            ? 'backdrop-blur-xl border-b shadow-xl shadow-black/40 py-3'
+            ? 'backdrop-blur-xl border-b shadow-2xl shadow-black/50 py-3'
             : 'bg-transparent py-5'
         }`}
       >
@@ -132,47 +135,49 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin }) => {
           {/* Logo / Brand */}
           <button
             onClick={() => scrollTo('home')}
-            className="group flex items-center gap-2.5 text-left focus:outline-none"
+            className="group flex items-center gap-3 text-left focus:outline-none"
             aria-label="Go to Home"
           >
             <div
               style={{
                 background: 'var(--accent-gradient)',
-                color: 'var(--accent-text-contrast, #020617)',
-                boxShadow: '0 4px 14px var(--accent-glow)',
+                color: 'var(--accent-text-contrast, #ffffff)',
+                boxShadow: '0 4px 16px var(--accent-glow)',
               }}
-              className="w-9 h-9 rounded-xl flex items-center justify-center font-black text-base group-hover:scale-105 transition-transform"
+              className="w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm group-hover:scale-105 transition-transform"
             >
-              Z
+              ZM
             </div>
             <div>
               <span className="font-extrabold text-lg tracking-tight text-white flex items-center gap-1 font-heading">
-                Zubair<span className="text-cyan-400">.dev</span>
+                Zubair<span className="text-blue-400">.dev</span>
               </span>
               <span className="block text-[10px] text-slate-400 font-mono tracking-wider">
-                Software Engineer
+                Full-Stack &amp; AI Engineer
               </span>
             </div>
           </button>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-1 bg-slate-900/60 p-1 rounded-full border border-white/10 backdrop-blur-md">
+          {/* Desktop Nav Links with animated sliding indicator */}
+          <nav className="hidden lg:flex items-center gap-1 bg-slate-900/70 p-1.5 rounded-full border border-white/10 backdrop-blur-md shadow-inner">
             {navLinks.map((link) => {
               const isActive = activeSection === link.id;
               return (
                 <button
                   key={link.id}
                   onClick={() => scrollTo(link.id)}
-                  className={`relative px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                    isActive
-                      ? 'text-cyan-300 font-semibold bg-cyan-950/60 shadow-inner'
-                      : 'text-slate-300 hover:text-white hover:bg-white/5'
+                  className={`relative px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                    isActive ? 'text-white font-semibold' : 'text-slate-300 hover:text-white'
                   }`}
                 >
-                  {link.label}
                   {isActive && (
-                    <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-sm shadow-cyan-400" />
+                    <motion.span
+                      layoutId="nav-active-pill"
+                      className="absolute inset-0 rounded-full bg-blue-600/30 border border-blue-400/40 shadow-[0_0_12px_rgba(79,140,255,0.3)] -z-10"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
                   )}
+                  {link.label}
                 </button>
               );
             })}
@@ -183,9 +188,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin }) => {
             {/* Download CV */}
             <button
               onClick={() => setIsResumeModalOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800/80 hover:bg-slate-700/90 text-slate-200 border border-slate-700 transition-all shadow-sm"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700/80 transition-all hover:scale-[1.02] shadow-sm active:scale-95"
             >
-              <Download className="w-3.5 h-3.5 text-cyan-400" />
+              <Download className="w-3.5 h-3.5 text-blue-400" />
               <span>Resume</span>
             </button>
 
@@ -194,10 +199,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin }) => {
               onClick={() => scrollTo('contact')}
               style={{
                 background: 'var(--accent-gradient)',
-                color: 'var(--accent-text-contrast, #020617)',
-                boxShadow: '0 4px 14px var(--accent-glow)',
+                color: 'var(--accent-text-contrast, #ffffff)',
+                boxShadow: '0 4px 16px var(--accent-glow)',
               }}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all hover:scale-[1.02] active:scale-[0.98] hover:brightness-110"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all hover:scale-[1.03] active:scale-[0.98] hover:brightness-110 shadow-md"
             >
               <Send className="w-3.5 h-3.5" />
               <span>Get In Touch</span>
@@ -225,7 +230,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin }) => {
               className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300"
               aria-label="Resume"
             >
-              <Download className="w-4 h-4 text-cyan-400" />
+              <Download className="w-4 h-4 text-blue-400" />
             </button>
             <button
               onClick={() => setMobileMenuOpen((prev) => !prev)}
@@ -238,56 +243,64 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin }) => {
         </div>
 
         {/* Mobile Navigation Drawer */}
-        {mobileMenuOpen && (
-          <div className="sm:hidden px-4 pt-3 pb-6 bg-slate-950/95 border-b border-slate-800 backdrop-blur-2xl animate-in slide-in-from-top duration-200">
-            <div className="grid grid-cols-2 gap-2 mb-4">
-              {navLinks.map((link) => {
-                const isActive = activeSection === link.id;
-                return (
-                  <button
-                    key={link.id}
-                    onClick={() => scrollTo(link.id)}
-                    className={`px-3 py-2 rounded-lg text-left text-xs font-medium transition-colors ${
-                      isActive
-                        ? 'bg-cyan-950/80 text-cyan-400 font-semibold border border-cyan-800/40'
-                        : 'text-slate-300 hover:bg-slate-900'
-                    }`}
-                  >
-                    {link.label}
-                  </button>
-                );
-              })}
-            </div>
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              className="sm:hidden px-4 pt-3 pb-6 bg-[#0b0d12]/98 border-b border-slate-800 backdrop-blur-2xl overflow-hidden"
+            >
+              <div className="grid grid-cols-2 gap-2 mb-4">
+                {navLinks.map((link) => {
+                  const isActive = activeSection === link.id;
+                  return (
+                    <button
+                      key={link.id}
+                      onClick={() => scrollTo(link.id)}
+                      className={`px-3 py-2 rounded-lg text-left text-xs font-medium transition-colors ${
+                        isActive
+                          ? 'bg-blue-950/80 text-blue-300 font-semibold border border-blue-800/50'
+                          : 'text-slate-300 hover:bg-slate-900'
+                      }`}
+                    >
+                      {link.label}
+                    </button>
+                  );
+                })}
+              </div>
 
-            <div className="flex flex-col gap-2.5 pt-3 border-t border-slate-800/80">
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  scrollTo('contact');
-                }}
-                style={{
-                  background: 'var(--accent-gradient)',
-                  color: 'var(--accent-text-contrast, #020617)',
-                  boxShadow: '0 4px 14px var(--accent-glow)',
-                }}
-                className="w-full py-2.5 rounded-xl text-xs font-bold text-center transition-all hover:brightness-110"
-              >
-                Get In Touch
-              </button>
+              <div className="flex flex-col gap-2.5 pt-3 border-t border-slate-800/80">
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    scrollTo('contact');
+                  }}
+                  style={{
+                    background: 'var(--accent-gradient)',
+                    color: 'var(--accent-text-contrast, #ffffff)',
+                    boxShadow: '0 4px 16px var(--accent-glow)',
+                  }}
+                  className="w-full py-2.5 rounded-xl text-xs font-bold text-center transition-all hover:brightness-110"
+                >
+                  Get In Touch
+                </button>
 
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenAdmin();
-                }}
-                className="w-full py-2 rounded-xl text-xs font-medium bg-slate-900 text-slate-300 border border-slate-800 flex items-center justify-center gap-2"
-              >
-                <Shield className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Admin CMS Dashboard</span>
-              </button>
-            </div>
-          </div>
-        )}
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onOpenAdmin();
+                  }}
+                  className="w-full py-2 rounded-xl text-xs font-medium bg-slate-900 text-slate-300 border border-slate-800 flex items-center justify-center gap-2"
+                >
+                  <Shield className="w-3.5 h-3.5 text-blue-400" />
+                  <span>Admin CMS Dashboard</span>
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
     </>
   );

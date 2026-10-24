@@ -24,40 +24,53 @@ export const Experience: React.FC = () => {
   };
 
   return (
-    <section id="experience" className="py-20 relative bg-slate-950/40">
+    <section id="experience" className="py-24 relative bg-[#090c13]/70 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="text-left mb-12">
-          <div className="inline-flex items-center gap-2 text-cyan-400 text-xs font-mono font-semibold uppercase tracking-wider mb-2">
-            <span className="w-2 h-2 rounded-full bg-cyan-400" />
+        {/* Section Header with Motion Reveal */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.5 }}
+          className="text-left mb-14"
+        >
+          <div className="inline-flex items-center gap-2 text-blue-400 text-xs font-mono font-semibold uppercase tracking-wider mb-2">
+            <span className="w-2 h-2 rounded-full bg-blue-400" />
             <span>Career &amp; Practical Work</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-heading">
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight font-heading">
             Work Experience
           </h2>
-          <p className="text-sm text-slate-400 mt-2 max-w-xl">
+          <p className="text-sm sm:text-base text-slate-400 mt-2 max-w-xl">
             Contract and freelance client delivery specializing in responsive frontend interfaces, user logic, and dependable deployments.
           </p>
-        </div>
+        </motion.div>
 
         {/* Timeline Container */}
-        <div className="relative border-l-2 border-slate-800 ml-4 sm:ml-8 space-y-8">
+        <div className="relative border-l-2 border-slate-800/90 ml-4 sm:ml-8 space-y-8">
           {visibleExp.map((exp, index) => {
             const isExpanded = expandedId === exp.id;
             return (
-              <div key={exp.id} className="relative pl-6 sm:pl-8 group">
+              <motion.div
+                key={exp.id}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="relative pl-6 sm:pl-8 group"
+              >
                 
                 {/* Timeline node icon */}
-                <div className="absolute -left-[17px] top-1.5 w-8 h-8 rounded-full bg-slate-900 border-2 border-cyan-500 flex items-center justify-center text-cyan-400 shadow-md shadow-cyan-500/20 group-hover:scale-110 transition-transform">
-                  <Briefcase className="w-4 h-4" />
+                <div className="absolute -left-[17px] top-1.5 w-8 h-8 rounded-full bg-[#0b0d12] border-2 border-blue-500 flex items-center justify-center text-blue-400 shadow-md shadow-blue-500/30 group-hover:scale-110 transition-transform">
+                  <Briefcase className="w-3.5 h-3.5" />
                 </div>
 
                 {/* Content Card */}
-                <div className="glass-panel p-6 sm:p-7 rounded-2xl border border-slate-800 transition-all hover:border-slate-700">
+                <div className="glass-panel p-6 sm:p-8 rounded-2xl border border-slate-800/90 transition-all hover:border-blue-500/40 shadow-xl bg-[#0e1420]/80">
                   
                   {/* Top Bar */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
                       <div className="flex items-center gap-2.5">
                         <h3 className="text-lg sm:text-xl font-bold text-white font-heading">
@@ -69,25 +82,25 @@ export const Experience: React.FC = () => {
                           </span>
                         )}
                       </div>
-                      <div className="text-sm font-semibold text-cyan-400 mt-0.5">
+                      <div className="text-sm font-semibold text-blue-400 mt-0.5">
                         {exp.company}
                       </div>
                     </div>
 
                     <div className="flex items-center gap-3 text-xs text-slate-400 font-mono">
-                      <span className="flex items-center gap-1 bg-slate-900/80 px-2.5 py-1 rounded-lg border border-slate-800">
-                        <Calendar className="w-3.5 h-3.5 text-cyan-400" />
+                      <span className="flex items-center gap-1.5 bg-[#111722] px-3 py-1 rounded-xl border border-slate-800 text-slate-300">
+                        <Calendar className="w-3.5 h-3.5 text-blue-400" />
                         {exp.period}
                       </span>
-                      <span className="flex items-center gap-1 bg-slate-900/80 px-2.5 py-1 rounded-lg border border-slate-800">
-                        <MapPin className="w-3.5 h-3.5 text-cyan-400" />
+                      <span className="flex items-center gap-1.5 bg-[#111722] px-3 py-1 rounded-xl border border-slate-800 text-slate-300">
+                        <MapPin className="w-3.5 h-3.5 text-blue-400" />
                         {exp.location}
                       </span>
                     </div>
                   </div>
 
                   {/* Summary */}
-                  <p className="text-sm text-slate-300 mt-3 leading-relaxed">
+                  <p className="text-sm text-slate-300 mt-3.5 leading-relaxed">
                     {exp.description}
                   </p>
 
@@ -96,7 +109,7 @@ export const Experience: React.FC = () => {
                     {exp.technologies.map((tech, idx) => (
                       <span
                         key={idx}
-                        className="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-900 text-slate-300 border border-slate-800"
+                        className="px-2.5 py-1 rounded-lg text-xs font-mono bg-[#111722] text-slate-300 border border-slate-800"
                       >
                         {tech}
                       </span>
@@ -104,10 +117,10 @@ export const Experience: React.FC = () => {
                   </div>
 
                   {/* Expand Toggle */}
-                  <div className="pt-4 mt-4 border-t border-slate-800/80 flex items-center justify-between">
+                  <div className="pt-4 mt-5 border-t border-slate-800/80 flex items-center justify-between">
                     <button
                       onClick={() => toggleExpand(exp.id)}
-                      className="flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors"
+                      className="flex items-center gap-1.5 text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
                       aria-expanded={isExpanded}
                     >
                       <span>{isExpanded ? 'Hide Key Responsibilities' : 'View Key Responsibilities & Highlights'}</span>
@@ -126,14 +139,14 @@ export const Experience: React.FC = () => {
                         transition={{ duration: 0.25 }}
                         className="overflow-hidden"
                       >
-                        <div className="pt-4 mt-2 space-y-2.5 border-t border-slate-800/40">
+                        <div className="pt-4 mt-2 space-y-2.5 border-t border-slate-800/60">
                           <h4 className="text-xs font-mono uppercase tracking-wider text-slate-400">
-                            Resume-Documented Scope:
+                            Documented Scope &amp; Responsibilities:
                           </h4>
                           <ul className="space-y-2">
                             {exp.responsibilities.map((resp, idx) => (
                               <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-300 leading-relaxed">
-                                <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+                                <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
                                 <span>{resp}</span>
                               </li>
                             ))}
@@ -144,7 +157,7 @@ export const Experience: React.FC = () => {
                   </AnimatePresence>
 
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
