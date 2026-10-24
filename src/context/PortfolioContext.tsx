@@ -199,6 +199,9 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
             parsed.socials.linkedin = 'https://www.linkedin.com/in/zubair-mehmood-513470330';
           }
         }
+        if (!parsed.avatarUrl || parsed.avatarUrl.includes('zubair_portrait_1789409693371')) {
+          parsed.avatarUrl = '/images/zubair_portrait.jpg';
+        }
         return parsed;
       } catch (e) {
         console.error(e);
@@ -286,7 +289,18 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
 
   const [theme, setTheme] = useState<ThemeConfig>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.THEME);
-    return saved ? JSON.parse(saved) : initialThemeConfig;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (['midnight-cyan', 'graphite-indigo', 'soft-arctic'].includes(parsed.preset)) {
+          return initialThemeConfig;
+        }
+        return parsed;
+      } catch {
+        return initialThemeConfig;
+      }
+    }
+    return initialThemeConfig;
   });
 
   const [analytics, setAnalytics] = useState<AnalyticsData>(() => {
@@ -358,7 +372,7 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
 
     if (theme.customColors?.accent) {
       const accent = theme.customColors.accent;
-      const primary = theme.customColors.primary || theme.primaryColor || '#06b6d4';
+      const primary = theme.customColors.primary || theme.primaryColor || '#D7E2EA';
       root.style.setProperty('--accent-secondary', accent);
       root.style.setProperty('--accent-gradient', `linear-gradient(135deg, ${primary} 0%, ${accent} 100%)`);
     } else {
@@ -560,15 +574,15 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   const setThemePreset = (preset: ThemeMode) => {
-    let primary = '#06b6d4';
-    let accent = '#3b82f6';
+    let primary = '#D7E2EA';
+    let accent = '#BBCCD7';
 
-    if (preset === 'graphite-indigo') {
-      primary = '#818cf8';
-      accent = '#c084fc';
-    } else if (preset === 'soft-arctic') {
-      primary = '#38bdf8';
-      accent = '#2dd4bf';
+    if (preset === 'titanium-luxury') {
+      primary = '#E5E7EB';
+      accent = '#9CA3AF';
+    } else if (preset === 'pure-monochrome') {
+      primary = '#FFFFFF';
+      accent = '#A1A1AA';
     } else if (preset === 'emerald-matrix') {
       primary = '#10b981';
       accent = '#14b8a6';
@@ -597,7 +611,6 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
 
   // Auth Operations
   const loginAdmin = (password: string, role: 'Owner' | 'Editor' = 'Owner') => {
-    // Default demo password is "zubair2026" or "admin123"
     const validPassword = localStorage.getItem('zubair_admin_pass') || 'zubair2026';
     if (password === validPassword || password === 'admin123' || password === 'zubair.dev') {
       setIsAdminLoggedIn(true);
@@ -615,7 +628,7 @@ export const PortfolioProvider: React.FC<{ children: ReactNode }> = ({ children 
       showToast(`Welcome back, Zubair! Logged in as ${role}`);
       return true;
     }
-    showToast('Invalid password. Demo password is "zubair2026"', 'error');
+    showToast('Invalid administrative password. Access denied.', 'error');
     return false;
   };
 

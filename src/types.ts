@@ -1,7 +1,7 @@
 export type ThemeMode =
-  | 'midnight-cyan'
-  | 'graphite-indigo'
-  | 'soft-arctic'
+  | 'chrome-noir'
+  | 'titanium-luxury'
+  | 'pure-monochrome'
   | 'emerald-matrix'
   | 'amber-solar'
   | 'crimson-cyber';

@@ -334,12 +334,12 @@ export const initialMessages: ContactMessage[] = [
 ];
 
 export const initialThemeConfig: ThemeConfig = {
-  preset: 'midnight-cyan',
-  primaryColor: '#06b6d4',
-  accentColor: '#3b82f6',
+  preset: 'chrome-noir',
+  primaryColor: '#D7E2EA',
+  accentColor: '#BBCCD7',
   cardStyle: 'glass',
   borderRadius: 'lg',
-  buttonStyle: 'gradient',
+  buttonStyle: 'minimal',
 };
 
 export const initialAnalytics: AnalyticsData = {
