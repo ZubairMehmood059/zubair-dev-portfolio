@@ -3,14 +3,10 @@ import { usePortfolio } from '../../context/PortfolioContext';
 import {
   Mail,
   Trash2,
-  Star,
-  CheckCircle2,
   Clock,
   Send,
   Search,
   Inbox,
-  User,
-  ExternalLink,
 } from 'lucide-react';
 import { ContactMessage } from '../../types';
 
@@ -56,37 +52,43 @@ export const AdminMessages: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-['Kanit',sans-serif] text-[#D7E2EA]">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-white font-heading">Direct Inquiry Inbox</h2>
-          <p className="text-xs text-slate-400">
+          <h2 className="text-xl sm:text-2xl font-black uppercase text-white tracking-tight hero-heading">
+            Direct Inquiry Inbox
+          </h2>
+          <p className="text-xs sm:text-sm text-[#BBCCD7]/70 font-light mt-1">
             Messages transmitted by visitors and recruiters via the contact form on Zubair.dev.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-[#BBCCD7]/60 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search messages..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8 pr-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-cyan-500 w-44"
+              className="pl-9 pr-3 py-1.5 rounded-full bg-[#121212] border border-white/10 text-xs text-white focus:outline-none focus:border-[#D7E2EA] w-48 sm:w-60"
             />
           </div>
 
-          <div className="flex rounded-lg bg-slate-950 border border-slate-800 p-0.5 text-xs">
+          <div className="flex rounded-full bg-[#121212] border border-white/10 p-0.5 text-xs">
             <button
               onClick={() => setFilterType('all')}
-              className={`px-2.5 py-1 rounded ${filterType === 'all' ? 'bg-slate-800 text-white' : 'text-slate-400'}`}
+              className={`px-3 py-1 rounded-full uppercase tracking-wider text-[11px] font-mono cursor-pointer transition-colors ${
+                filterType === 'all' ? 'bg-[#D7E2EA] text-[#0C0C0C] font-bold' : 'text-[#BBCCD7]/70 hover:text-white'
+              }`}
             >
               All
             </button>
             <button
               onClick={() => setFilterType('unread')}
-              className={`px-2.5 py-1 rounded ${filterType === 'unread' ? 'bg-slate-800 text-white' : 'text-slate-400'}`}
+              className={`px-3 py-1 rounded-full uppercase tracking-wider text-[11px] font-mono cursor-pointer transition-colors ${
+                filterType === 'unread' ? 'bg-[#D7E2EA] text-[#0C0C0C] font-bold' : 'text-[#BBCCD7]/70 hover:text-white'
+              }`}
             >
               Unread
             </button>
@@ -96,44 +98,43 @@ export const AdminMessages: React.FC = () => {
 
       {/* Split layout: Messages list (Left) + Message preview (Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        
         {/* Left List (5 cols) */}
-        <div className="lg:col-span-5 space-y-2 max-h-[600px] overflow-y-auto pr-1">
+        <div className="lg:col-span-5 space-y-2.5 max-h-[600px] overflow-y-auto pr-1">
           {filtered.map((msg) => {
             const isSelected = selectedMessage?.id === msg.id;
             return (
               <div
                 key={msg.id}
                 onClick={() => handleSelectMessage(msg)}
-                className={`p-4 rounded-xl border text-xs cursor-pointer transition-all ${
+                className={`p-4 rounded-[20px] border text-xs cursor-pointer transition-all ${
                   isSelected
-                    ? 'bg-cyan-950/40 border-cyan-500/80 shadow-md'
+                    ? 'bg-[#18181B] border-[#D7E2EA] shadow-md'
                     : !msg.isRead
-                    ? 'bg-slate-900 border-cyan-500/40'
-                    : 'bg-slate-900/60 border-slate-800 hover:bg-slate-900 hover:border-slate-700'
+                    ? 'bg-[#141414] border-[#D7E2EA]/40'
+                    : 'bg-[#121212] border-white/10 hover:bg-[#18181B] hover:border-white/20'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     {!msg.isRead && (
-                      <span className="w-2 h-2 rounded-full bg-cyan-400 shrink-0" />
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
                     )}
-                    <span className="font-bold text-white line-clamp-1">{msg.name}</span>
+                    <span className="font-bold text-white uppercase line-clamp-1">{msg.name}</span>
                   </div>
-                  <span className="text-[10px] text-slate-500 font-mono shrink-0">
-                    {new Date(msg.timestamp).toLocaleDateString()}
+                  <span className="text-[10px] text-[#BBCCD7]/50 font-mono shrink-0">
+                    {msg.createdAt || 'Recent'}
                   </span>
                 </div>
 
-                <div className="text-cyan-300 font-medium mt-1 truncate">{msg.subject}</div>
-                <p className="text-slate-400 line-clamp-2 mt-1 leading-relaxed">{msg.message}</p>
+                <div className="text-[#D7E2EA] font-medium mt-1 truncate">{msg.subject}</div>
+                <p className="text-[#BBCCD7]/60 line-clamp-2 mt-1 leading-relaxed font-light">{msg.message}</p>
               </div>
             );
           })}
 
           {filtered.length === 0 && (
-            <div className="p-8 text-center bg-slate-900/40 rounded-xl border border-slate-800 text-slate-400 text-xs">
-              <Inbox className="w-8 h-8 mx-auto text-slate-600 mb-2" />
+            <div className="p-8 text-center bg-[#121212] rounded-[24px] border border-white/10 text-[#BBCCD7]/60 text-xs">
+              <Inbox className="w-8 h-8 mx-auto text-[#BBCCD7]/40 mb-2" />
               No messages found.
             </div>
           )}
@@ -142,26 +143,27 @@ export const AdminMessages: React.FC = () => {
         {/* Right Reader (7 cols) */}
         <div className="lg:col-span-7">
           {selectedMessage ? (
-            <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-6">
-              
+            <div className="p-6 rounded-[28px] bg-[#121212] border border-white/10 space-y-6">
               {/* Message Header */}
-              <div className="flex items-start justify-between gap-4 border-b border-slate-800 pb-4">
+              <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
                 <div>
-                  <h3 className="text-lg font-bold text-white">{selectedMessage.subject}</h3>
-                  <div className="flex items-center gap-2 text-xs text-slate-400 mt-1">
-                    <span className="font-semibold text-slate-200">{selectedMessage.name}</span>
+                  <h3 className="text-base sm:text-lg font-bold text-white uppercase tracking-wide">
+                    {selectedMessage.subject}
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-[#BBCCD7]/70 mt-1">
+                    <span className="font-semibold text-white uppercase">{selectedMessage.name}</span>
                     <span>&lt;{selectedMessage.email}&gt;</span>
                   </div>
-                  <div className="text-[11px] text-slate-500 font-mono mt-1 flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-cyan-400" />
-                    <span>{new Date(selectedMessage.timestamp).toLocaleString()}</span>
+                  <div className="text-[11px] text-[#BBCCD7]/50 font-mono mt-1 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-[#D7E2EA]" />
+                    <span>{selectedMessage.createdAt || 'Direct Contact Form'}</span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <a
                     href={`mailto:${selectedMessage.email}?subject=Re: ${encodeURIComponent(selectedMessage.subject)}`}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow transition-colors"
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#D7E2EA] hover:bg-white text-[#0C0C0C] font-bold text-xs uppercase tracking-wider shadow transition-colors cursor-pointer"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>Reply</span>
@@ -169,7 +171,7 @@ export const AdminMessages: React.FC = () => {
 
                   <button
                     onClick={() => handleDelete(selectedMessage.id)}
-                    className="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-rose-400 hover:bg-slate-700"
+                    className="p-2 rounded-full bg-black/40 border border-white/10 text-white/50 hover:text-rose-400 hover:border-rose-500/40 cursor-pointer"
                     title="Delete message"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -178,29 +180,28 @@ export const AdminMessages: React.FC = () => {
               </div>
 
               {/* Message Content Body */}
-              <div className="text-sm text-slate-200 leading-relaxed whitespace-pre-wrap font-sans bg-slate-950/60 p-4 rounded-xl border border-slate-800/80 min-h-[160px]">
+              <div className="text-xs sm:text-sm text-[#D7E2EA] leading-relaxed whitespace-pre-wrap font-sans bg-black/50 p-5 rounded-[20px] border border-white/10 min-h-[160px] font-light">
                 {selectedMessage.message}
               </div>
 
               {/* Quick Actions Footer */}
-              <div className="flex items-center justify-between text-xs text-slate-400 pt-2">
+              <div className="flex items-center justify-between text-xs text-[#BBCCD7]/60 pt-2 font-mono">
                 <button
                   onClick={() => markMessageRead(selectedMessage.id, !selectedMessage.isRead)}
-                  className="hover:text-cyan-300"
+                  className="hover:text-white uppercase tracking-wider cursor-pointer"
                 >
                   Mark as {selectedMessage.isRead ? 'Unread' : 'Read'}
                 </button>
 
-                <span className="font-mono text-[11px] text-slate-500">ID: {selectedMessage.id}</span>
+                <span className="text-[11px]">ID: {selectedMessage.id}</span>
               </div>
             </div>
           ) : (
-            <div className="glass-panel p-12 text-center rounded-2xl border border-slate-800 text-slate-400 text-xs">
+            <div className="p-12 text-center rounded-[28px] bg-[#121212] border border-white/10 text-[#BBCCD7]/60 text-xs">
               Select a message from the list to view transmission details.
             </div>
           )}
         </div>
-
       </div>
     </div>
   );

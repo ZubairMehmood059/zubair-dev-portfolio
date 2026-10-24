@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import {
-  Menu,
-  X,
-  Download,
-  Shield,
-  Send,
-  Terminal,
-  Sparkles,
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
-import { ThemeMode } from '../types';
+import { FileText, Lock, Menu, X } from 'lucide-react';
+import { Logo } from './common/Logo';
 
 interface NavbarProps {
   onOpenAdmin: () => void;
@@ -20,7 +11,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin }) => {
   const {
     activeSection,
     setActiveSection,
-    theme,
     setIsResumeModalOpen,
     isAdminLoggedIn,
     isPreviewMode,
@@ -30,29 +20,47 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Monitor scroll for sticky shadow & active link
+  const navLinks = [
+    { id: 'home', label: 'Home' },
+    { id: 'about', label: 'About' },
+    { id: 'skills', label: 'Skills' },
+    { id: 'experience', label: 'Experience' },
+    { id: 'education', label: 'Education' },
+    { id: 'services', label: 'Services' },
+    { id: 'projects', label: 'Projects' },
+    { id: 'contact', label: 'Contact' },
+  ];
+
+  const drawerLinks = [
+    { id: 'home', label: 'Home' },
+    { id: 'about', label: 'About' },
+    { id: 'skills', label: 'Skills' },
+    { id: 'experience', label: 'Experience' },
+    { id: 'education', label: 'Education' },
+    { id: 'services', label: 'Services' },
+    { id: 'projects', label: 'Projects' },
+    { id: 'contact', label: 'Contact' },
+  ];
+
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 25) {
+      if (window.scrollY > 40) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
       }
 
-      // Detect active section
       const sections = [
         'home',
         'about',
-        'experience',
         'skills',
-        'projects',
+        'experience',
         'education',
-        'certifications',
-        'focus',
-        'faq',
+        'services',
+        'projects',
         'contact',
       ];
-      const scrollPos = window.scrollY + 140;
+      const scrollPos = window.scrollY + 200;
 
       for (const sectionId of sections) {
         const el = document.getElementById(sectionId);
@@ -71,32 +79,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [setActiveSection]);
 
-  const navLinks = [
-    { id: 'home', label: 'Home' },
-    { id: 'about', label: 'About' },
-    { id: 'experience', label: 'Experience' },
-    { id: 'skills', label: 'Skills' },
-    { id: 'projects', label: 'Projects' },
-    { id: 'education', label: 'Education' },
-    { id: 'certifications', label: 'Certs' },
-    { id: 'focus', label: 'Focus' },
-    { id: 'faq', label: 'FAQ' },
-    { id: 'contact', label: 'Contact' },
-  ];
-
   const scrollTo = (id: string) => {
     setActiveSection(id);
     setMobileMenuOpen(false);
+    if (id === 'home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
     const element = document.getElementById(id);
     if (element) {
-      const navOffset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - navOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-      });
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -104,203 +96,160 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin }) => {
     <>
       {/* Draft Preview Bar if Preview Mode is active */}
       {isPreviewMode && (
-        <div className="fixed top-0 inset-x-0 z-50 bg-amber-500 text-slate-950 px-4 py-1.5 text-xs font-semibold flex items-center justify-between shadow-lg">
+        <div className="fixed top-0 inset-x-0 z-50 bg-[#BBCCD7] text-[#0C0C0C] px-4 py-1.5 text-xs font-mono font-bold flex items-center justify-between shadow-lg">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-slate-950 animate-ping" />
-            <span>PREVIEW MODE: Viewing unpublished draft changes</span>
+            <span className="w-2 h-2 rounded-full bg-[#0C0C0C] animate-ping" />
+            <span>PREVIEW MODE: Viewing unpublished drafts</span>
           </div>
           <button
+            type="button"
             onClick={togglePreviewMode}
-            className="px-2.5 py-0.5 rounded bg-slate-950 text-amber-400 text-xs hover:bg-slate-800 transition-colors"
+            className="px-2.5 py-0.5 rounded-full bg-[#0C0C0C] text-white text-xs hover:bg-neutral-800 transition-colors cursor-pointer"
           >
             Exit Preview
           </button>
         </div>
       )}
 
+      {/* Unified Navigation Header: transparent at top, frosted glass when scrolled */}
       <header
-        style={{
-          backgroundColor: isScrolled ? 'rgba(11, 13, 18, 0.85)' : 'transparent',
-          borderColor: isScrolled ? 'var(--border-color)' : 'transparent',
-        }}
         className={`fixed left-0 right-0 z-40 transition-all duration-300 ${
           isPreviewMode ? 'top-8' : 'top-0'
         } ${
           isScrolled
-            ? 'backdrop-blur-xl border-b shadow-2xl shadow-black/50 py-3'
-            : 'bg-transparent py-5'
+            ? 'backdrop-blur-xl bg-[#0C0C0C]/90 border-b border-white/10 py-3 shadow-[0_4px_24px_rgba(0,0,0,0.6)]'
+            : 'bg-transparent border-b border-transparent py-4 sm:py-5 md:py-6'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          {/* Logo / Brand */}
-          <button
-            onClick={() => scrollTo('home')}
-            className="group flex items-center gap-3 text-left focus:outline-none"
-            aria-label="Go to Home"
-          >
-            <div
-              style={{
-                background: 'var(--accent-gradient)',
-                color: 'var(--accent-text-contrast, #ffffff)',
-                boxShadow: '0 4px 16px var(--accent-glow)',
-              }}
-              className="w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm group-hover:scale-105 transition-transform"
-            >
-              ZM
-            </div>
-            <div>
-              <span className="font-extrabold text-lg tracking-tight text-white flex items-center gap-1 font-heading">
-                Zubair<span className="text-blue-400">.dev</span>
-              </span>
-              <span className="block text-[10px] text-slate-400 font-mono tracking-wider">
-                Full-Stack &amp; AI Engineer
-              </span>
-            </div>
-          </button>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 flex items-center justify-between">
+          {/* Brand Logo */}
+          <Logo
+            size="sm"
+            showDot
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          />
 
-          {/* Desktop Nav Links with animated sliding indicator */}
-          <nav className="hidden lg:flex items-center gap-1 bg-slate-900/70 p-1.5 rounded-full border border-white/10 backdrop-blur-md shadow-inner">
+          {/* Desktop & Laptop Nav Links (All 8 links) */}
+          <nav className="hidden lg:flex items-center gap-2.5 lg:gap-3.5 xl:gap-5 shrink-0">
             {navLinks.map((link) => {
               const isActive = activeSection === link.id;
               return (
                 <button
                   key={link.id}
+                  type="button"
                   onClick={() => scrollTo(link.id)}
-                  className={`relative px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                    isActive ? 'text-white font-semibold' : 'text-slate-300 hover:text-white'
+                  className={`text-[11px] xl:text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer py-1 whitespace-nowrap ${
+                    isActive
+                      ? 'text-white border-b-2 border-[#D7E2EA]'
+                      : 'text-[#D7E2EA]/70 hover:text-white'
                   }`}
                 >
-                  {isActive && (
-                    <motion.span
-                      layoutId="nav-active-pill"
-                      className="absolute inset-0 rounded-full bg-blue-600/30 border border-blue-400/40 shadow-[0_0_12px_rgba(79,140,255,0.3)] -z-10"
-                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                    />
-                  )}
                   {link.label}
                 </button>
               );
             })}
           </nav>
 
+          {/* Medium screen Nav Links (Compact subset) */}
+          <nav className="hidden md:flex lg:hidden items-center gap-2 shrink-0">
+            {navLinks
+              .filter((l) => ['home', 'about', 'skills', 'projects', 'contact'].includes(l.id))
+              .map((link) => {
+                const isActive = activeSection === link.id;
+                return (
+                  <button
+                    key={link.id}
+                    type="button"
+                    onClick={() => scrollTo(link.id)}
+                    className={`text-[10px] font-semibold uppercase tracking-wider transition-all cursor-pointer py-1 whitespace-nowrap ${
+                      isActive ? 'text-white border-b-2 border-[#D7E2EA]' : 'text-[#D7E2EA]/70 hover:text-white'
+                    }`}
+                  >
+                    {link.label}
+                  </button>
+                );
+              })}
+          </nav>
+
           {/* Desktop Actions */}
-          <div className="hidden sm:flex items-center gap-3">
-            {/* Download CV */}
+          <div className="hidden sm:flex items-center gap-3 shrink-0">
             <button
+              type="button"
               onClick={() => setIsResumeModalOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700/80 transition-all hover:scale-[1.02] shadow-sm active:scale-95"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider border border-[#D7E2EA]/40 text-[#D7E2EA] hover:border-white hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
             >
-              <Download className="w-3.5 h-3.5 text-blue-400" />
-              <span>Resume</span>
+              <FileText className="w-3.5 h-3.5" />
+              <span>CV</span>
             </button>
 
-            {/* Contact CTA */}
             <button
-              onClick={() => scrollTo('contact')}
-              style={{
-                background: 'var(--accent-gradient)',
-                color: 'var(--accent-text-contrast, #ffffff)',
-                boxShadow: '0 4px 16px var(--accent-glow)',
-              }}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all hover:scale-[1.03] active:scale-[0.98] hover:brightness-110 shadow-md"
-            >
-              <Send className="w-3.5 h-3.5" />
-              <span>Get In Touch</span>
-            </button>
-
-            {/* Admin Portal Button */}
-            <button
+              type="button"
               onClick={onOpenAdmin}
-              className={`p-2 rounded-xl border transition-colors ${
+              className={`p-2 rounded-full border transition-colors cursor-pointer ${
                 isAdminLoggedIn
-                  ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-400 hover:bg-emerald-900/60'
-                  : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                  ? 'border-emerald-500/60 text-emerald-400 bg-emerald-950/40'
+                  : 'border-white/10 text-white/50 hover:text-white hover:border-white/30'
               }`}
-              title={isAdminLoggedIn ? 'Open Admin CMS (Logged In)' : 'Admin Login'}
-              aria-label="Admin Control Panel"
+              title={isAdminLoggedIn ? 'Admin CMS (Logged In)' : 'Admin Portal'}
+              aria-label="Admin Control"
             >
-              <Shield className="w-4 h-4" />
+              <Lock className="w-3.5 h-3.5" />
             </button>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex sm:hidden items-center gap-2">
+          <div className="flex md:hidden items-center gap-2">
             <button
+              type="button"
               onClick={() => setIsResumeModalOpen(true)}
-              className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300"
-              aria-label="Resume"
+              className="px-3 py-1 rounded-full text-xs font-mono border border-white/20 text-[#D7E2EA] cursor-pointer"
             >
-              <Download className="w-4 h-4 text-blue-400" />
+              CV
             </button>
             <button
+              type="button"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
-              className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white"
+              className="p-2 rounded-full bg-white/5 text-white cursor-pointer"
               aria-label="Toggle Navigation Menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
 
         {/* Mobile Navigation Drawer */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25 }}
-              className="sm:hidden px-4 pt-3 pb-6 bg-[#0b0d12]/98 border-b border-slate-800 backdrop-blur-2xl overflow-hidden"
-            >
-              <div className="grid grid-cols-2 gap-2 mb-4">
-                {navLinks.map((link) => {
-                  const isActive = activeSection === link.id;
-                  return (
-                    <button
-                      key={link.id}
-                      onClick={() => scrollTo(link.id)}
-                      className={`px-3 py-2 rounded-lg text-left text-xs font-medium transition-colors ${
-                        isActive
-                          ? 'bg-blue-950/80 text-blue-300 font-semibold border border-blue-800/50'
-                          : 'text-slate-300 hover:bg-slate-900'
-                      }`}
-                    >
-                      {link.label}
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div className="flex flex-col gap-2.5 pt-3 border-t border-slate-800/80">
+        {mobileMenuOpen && (
+          <div className="md:hidden px-6 pt-4 pb-6 bg-[#0C0C0C]/98 border-b border-white/10 backdrop-blur-2xl">
+            <div className="flex flex-col gap-2.5">
+              {drawerLinks.map((link) => (
                 <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    scrollTo('contact');
-                  }}
-                  style={{
-                    background: 'var(--accent-gradient)',
-                    color: 'var(--accent-text-contrast, #ffffff)',
-                    boxShadow: '0 4px 16px var(--accent-glow)',
-                  }}
-                  className="w-full py-2.5 rounded-xl text-xs font-bold text-center transition-all hover:brightness-110"
+                  key={link.id}
+                  type="button"
+                  onClick={() => scrollTo(link.id)}
+                  className="text-left text-sm font-medium uppercase tracking-wider text-[#D7E2EA] hover:text-white py-1.5 flex items-center justify-between"
                 >
-                  Get In Touch
+                  <span>{link.label}</span>
+                  {activeSection === link.id && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#D7E2EA]" />
+                  )}
                 </button>
-
+              ))}
+              <div className="pt-3 mt-2 border-t border-white/10 flex items-center justify-between">
                 <button
+                  type="button"
                   onClick={() => {
                     setMobileMenuOpen(false);
                     onOpenAdmin();
                   }}
-                  className="w-full py-2 rounded-xl text-xs font-medium bg-slate-900 text-slate-300 border border-slate-800 flex items-center justify-center gap-2"
+                  className="text-xs font-mono uppercase text-white/60 hover:text-white flex items-center gap-1.5 cursor-pointer"
                 >
-                  <Shield className="w-3.5 h-3.5 text-blue-400" />
-                  <span>Admin CMS Dashboard</span>
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>Admin Portal</span>
                 </button>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </div>
+          </div>
+        )}
       </header>
     </>
   );

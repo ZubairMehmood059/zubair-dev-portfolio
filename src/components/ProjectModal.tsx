@@ -1,7 +1,8 @@
 import React from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import { X, ExternalLink, Github, CheckCircle, ArrowRight, Layers, Shield, Sparkles } from 'lucide-react';
+import { X, Github, CheckCircle, ArrowRight, Layers, Shield, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { LiveProjectButton } from './common/MotionComponents';
 
 export const ProjectModal: React.FC = () => {
   const { selectedProject, setSelectedProject } = usePortfolio();
@@ -18,22 +19,23 @@ export const ProjectModal: React.FC = () => {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="relative w-full max-w-4xl bg-[#0e1420] border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden my-6 max-h-[90vh] flex flex-col"
+          className="relative w-full max-w-4xl bg-[#0C0C0C] border-2 border-[#D7E2EA] rounded-[32px] sm:rounded-[44px] shadow-[0_25px_60px_rgba(0,0,0,0.95)] overflow-hidden my-6 max-h-[90vh] flex flex-col font-['Kanit',sans-serif] text-[#D7E2EA]"
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 bg-[#07090e]/95 border-b border-slate-800 shrink-0 sticky top-0 z-10">
+          <div className="flex items-center justify-between px-6 sm:px-8 py-5 bg-[#0C0C0C] border-b border-white/10 shrink-0 sticky top-0 z-10">
             <div className="flex items-center gap-3">
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-950/80 text-blue-300 border border-blue-800/40">
+              <span className="px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider bg-white/10 text-white border border-white/20">
                 {category}
               </span>
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-medium border border-slate-700">
+              <span className="text-xs px-3 py-1 rounded-full bg-white/5 text-[#BBCCD7] font-mono border border-white/10">
                 Status: {status}
               </span>
             </div>
 
             <button
+              type="button"
               onClick={() => setSelectedProject(null)}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+              className="p-2 rounded-full text-[#D7E2EA] hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
               aria-label="Close modal"
             >
               <X className="w-5 h-5" />
@@ -41,30 +43,34 @@ export const ProjectModal: React.FC = () => {
           </div>
 
           {/* Scrollable Content */}
-          <div className="p-6 sm:p-8 overflow-y-auto space-y-8">
+          <div className="p-6 sm:p-8 md:p-10 overflow-y-auto space-y-8">
             {/* Title & Tagline */}
             <div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-heading">{title}</h2>
-              <p className="text-base text-slate-300 mt-2 font-normal leading-relaxed">{tagline}</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-white hero-heading">
+                {title}
+              </h2>
+              <p className="text-base sm:text-lg text-[#D7E2EA] mt-2 font-light leading-relaxed">
+                {tagline}
+              </p>
             </div>
 
             {/* Visual Preview / Hero Image */}
-            <div className="relative rounded-2xl overflow-hidden border border-slate-800 shadow-xl bg-slate-950">
+            <div className="relative rounded-[24px] sm:rounded-[32px] overflow-hidden border border-white/10 shadow-2xl bg-[#161616]">
               <img
                 src={imageUrl}
                 alt={`${title} project preview`}
                 referrerPolicy="no-referrer"
-                className="w-full h-64 sm:h-80 object-cover object-top"
+                className="w-full h-64 sm:h-80 md:h-96 object-cover object-top"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0e1420] via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0C0C0C] via-transparent to-transparent pointer-events-none" />
               
-              {/* Quick links banner */}
+              {/* Quick links & tags */}
               <div className="absolute bottom-4 left-4 right-4 flex flex-wrap items-center justify-between gap-3">
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-2">
                   {technologies.map((tech, idx) => (
                     <span
                       key={idx}
-                      className="px-2.5 py-1 text-xs rounded-lg bg-[#0b0d12]/90 backdrop-blur-md text-slate-200 border border-slate-700/60 font-mono"
+                      className="px-3 py-1 text-xs rounded-full bg-black/60 backdrop-blur-md text-[#D7E2EA] border border-white/20 font-mono"
                     >
                       {tech}
                     </span>
@@ -77,10 +83,10 @@ export const ProjectModal: React.FC = () => {
                       href={githubUrl}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/95 hover:bg-slate-700 text-white text-xs font-semibold backdrop-blur-md border border-slate-600 transition-all shadow"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-black/80 hover:bg-black text-white text-xs font-mono uppercase tracking-wider backdrop-blur-md border border-white/30 transition-all cursor-pointer"
                     >
                       <Github className="w-3.5 h-3.5" />
-                      View Code
+                      <span>Code</span>
                     </a>
                   )}
                   {liveUrl && (
@@ -88,15 +94,12 @@ export const ProjectModal: React.FC = () => {
                       href={liveUrl}
                       target="_blank"
                       rel="noreferrer noopener"
+                      className="inline-flex items-center justify-center rounded-full px-5 py-2 text-xs font-medium uppercase tracking-widest text-white transition-all hover:scale-105 active:scale-95 outline outline-2 outline-white -outline-offset-[3px] cursor-pointer"
                       style={{
-                        background: 'var(--accent-gradient)',
-                        color: 'var(--accent-text-contrast, #ffffff)',
-                        boxShadow: '0 4px 14px var(--accent-glow)',
+                        background: 'linear-gradient(123deg, #18011F 7%, #B600A8 37%, #7621B0 72%, #BE4C00 100%)',
                       }}
-                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-md transition-all shadow hover:brightness-110"
                     >
-                      <ExternalLink className="w-3.5 h-3.5" />
-                      Live Demo
+                      Live
                     </a>
                   )}
                 </div>
@@ -106,57 +109,65 @@ export const ProjectModal: React.FC = () => {
             {/* Case Study Sections */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Overview */}
-              <div className="p-5 rounded-xl bg-[#0b0d12]/60 border border-slate-800/80">
-                <div className="flex items-center gap-2 text-blue-400 font-semibold text-sm mb-2">
-                  <Layers className="w-4 h-4" />
+              <div className="p-6 rounded-[24px] bg-[#161616] border border-white/10">
+                <div className="flex items-center gap-2 text-white font-bold uppercase text-sm mb-2.5">
+                  <Layers className="w-4 h-4 text-[#BBCCD7]" />
                   <h3>Project Overview</h3>
                 </div>
-                <p className="text-sm text-slate-300 leading-relaxed">{caseStudy.overview}</p>
+                <p className="text-sm text-[#D7E2EA]/80 leading-relaxed font-light">
+                  {caseStudy.overview}
+                </p>
               </div>
 
               {/* The Problem */}
-              <div className="p-5 rounded-xl bg-[#0b0d12]/60 border border-slate-800/80">
-                <div className="flex items-center gap-2 text-rose-400 font-semibold text-sm mb-2">
-                  <Shield className="w-4 h-4" />
+              <div className="p-6 rounded-[24px] bg-[#161616] border border-white/10">
+                <div className="flex items-center gap-2 text-white font-bold uppercase text-sm mb-2.5">
+                  <Shield className="w-4 h-4 text-[#BBCCD7]" />
                   <h3>The Problem</h3>
                 </div>
-                <p className="text-sm text-slate-300 leading-relaxed">{caseStudy.problem}</p>
+                <p className="text-sm text-[#D7E2EA]/80 leading-relaxed font-light">
+                  {caseStudy.problem}
+                </p>
               </div>
             </div>
 
             {/* Engineering Approach */}
-            <div className="p-5 rounded-xl bg-[#0b0d12]/60 border border-slate-800/80">
-              <div className="flex items-center gap-2 text-indigo-400 font-semibold text-sm mb-2">
-                <ArrowRight className="w-4 h-4" />
-                <h3>Engineering Approach &amp; Architecture</h3>
+            <div className="p-6 rounded-[24px] bg-[#161616] border border-white/10">
+              <div className="flex items-center gap-2 text-white font-bold uppercase text-sm mb-2.5">
+                <ArrowRight className="w-4 h-4 text-[#BBCCD7]" />
+                <h3>Architecture &amp; Engineering Approach</h3>
               </div>
-              <p className="text-sm text-slate-300 leading-relaxed">{caseStudy.approach}</p>
+              <p className="text-sm text-[#D7E2EA]/80 leading-relaxed font-light">
+                {caseStudy.approach}
+              </p>
             </div>
 
             {/* Key Features */}
             <div>
-              <div className="flex items-center gap-2 text-slate-200 font-bold text-sm mb-3">
-                <Sparkles className="w-4 h-4 text-blue-400" />
+              <div className="flex items-center gap-2 text-white font-bold uppercase text-sm mb-3">
+                <Sparkles className="w-4 h-4 text-[#BBCCD7]" />
                 <h3>Key Features &amp; Implementation Highlights</h3>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {caseStudy.keyFeatures.map((feat, idx) => (
-                  <div key={idx} className="flex items-start gap-2.5 p-3 rounded-xl bg-[#0b0d12]/50 border border-slate-800/60">
-                    <CheckCircle className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                    <span className="text-xs text-slate-300 leading-relaxed">{feat}</span>
+                  <div key={idx} className="flex items-start gap-2.5 p-4 rounded-[20px] bg-[#161616] border border-white/10">
+                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <span className="text-xs sm:text-sm text-[#D7E2EA]/90 leading-relaxed">{feat}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Outcomes & Impact if available */}
+            {/* Outcomes & Impact */}
             {caseStudy.outcomes && caseStudy.outcomes.length > 0 && (
-              <div className="p-5 rounded-xl bg-blue-950/20 border border-blue-800/30">
-                <h3 className="text-sm font-semibold text-blue-300 mb-2 font-heading">Measurable Outcomes &amp; Technical Learnings</h3>
-                <ul className="space-y-1.5">
+              <div className="p-6 rounded-[24px] bg-[#161616] border border-white/10">
+                <h3 className="text-sm font-bold uppercase text-white mb-3">
+                  Measurable Outcomes &amp; Technical Learnings
+                </h3>
+                <ul className="space-y-2">
                   {caseStudy.outcomes.map((outc, idx) => (
-                    <li key={idx} className="text-xs text-slate-300 flex items-start gap-2">
-                      <span className="text-blue-400 font-bold">•</span>
+                    <li key={idx} className="text-xs sm:text-sm text-[#D7E2EA]/80 flex items-start gap-2.5">
+                      <span className="text-[#BBCCD7] font-bold">•</span>
                       <span>{outc}</span>
                     </li>
                   ))}
@@ -166,35 +177,26 @@ export const ProjectModal: React.FC = () => {
           </div>
 
           {/* Modal Footer */}
-          <div className="flex items-center justify-between px-6 py-4 bg-[#07090e]/95 border-t border-slate-800 shrink-0">
-            <span className="text-xs text-slate-500 font-mono">Source: Official Zubair.dev Case Study</span>
+          <div className="flex items-center justify-between px-6 sm:px-8 py-5 bg-[#0C0C0C] border-t border-white/10 shrink-0">
+            <span className="text-xs text-[#BBCCD7]/60 font-mono">Zubair.dev Verified Case Study</span>
             <div className="flex items-center gap-3">
               {githubUrl && (
                 <a
                   href={githubUrl}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 text-xs font-medium transition-colors"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[#D7E2EA] hover:text-white bg-white/5 hover:bg-white/10 text-xs font-mono uppercase tracking-wider transition-colors cursor-pointer"
                 >
                   <Github className="w-4 h-4" />
-                  Repository
+                  <span>GitHub</span>
                 </a>
               )}
               {liveUrl && (
-                <a
+                <LiveProjectButton
+                  label="Launch"
                   href={liveUrl}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  style={{
-                    background: 'var(--accent-gradient)',
-                    color: 'var(--accent-text-contrast, #ffffff)',
-                    boxShadow: '0 4px 14px var(--accent-glow)',
-                  }}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all shadow-md hover:brightness-110"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                  Launch Project
-                </a>
+                  className="px-6 py-2 text-xs"
+                />
               )}
             </div>
           </div>

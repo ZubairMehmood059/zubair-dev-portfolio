@@ -1,201 +1,91 @@
 import React from 'react';
-import { usePortfolio } from '../context/PortfolioContext';
-import {
-  MapPin,
-  GraduationCap,
-  Clock,
-  BookOpen,
-  Sparkles,
-  Compass,
-  CheckCircle,
-  Lightbulb,
-  Cpu,
-  Shield,
-  Layers,
-  Terminal,
-} from 'lucide-react';
-import { motion } from 'motion/react';
+import { FadeIn, AnimatedText, ContactButton } from './common/MotionComponents';
 
 export const About: React.FC = () => {
-  const { about } = usePortfolio();
+  const aboutText =
+    "With more than two years of hands-on experience in software engineering, i focus on modern web architectures, Python backend systems, and AI-driven products, i truly enjoy collaborating on projects that aim to stand out and deliver high-impact performance. Let's build something incredible together!";
 
   return (
-    <section id="about" className="py-24 relative overflow-hidden">
-      {/* Subtle ambient light backdrop */}
-      <div
-        style={{ background: 'radial-gradient(circle, rgba(79,140,255,0.1) 0%, rgba(11,13,18,0) 70%)' }}
-        className="absolute top-1/2 left-0 w-[500px] h-[500px] rounded-full blur-3xl pointer-events-none -z-10"
-      />
+    <section
+      id="about"
+      className="relative min-h-screen w-full flex flex-col items-center justify-center bg-[#0C0C0C] px-5 sm:px-8 md:px-10 py-20 overflow-hidden select-none"
+    >
+      {/* 4 Decorative 3D Floating Images in Corners */}
+      {/* 1. Top-Left: Moon icon */}
+      <div className="absolute top-[4%] left-[1%] sm:left-[2%] md:left-[4%] z-10 pointer-events-none">
+        <FadeIn delay={0.1} x={-80} y={0} duration={0.9}>
+          <img
+            src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/moon_icon.11395d36.png"
+            alt="3D Moon Object"
+            referrerPolicy="no-referrer"
+            className="w-[120px] sm:w-[160px] md:w-[210px] h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)]"
+          />
+        </FadeIn>
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header with Motion Reveal */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.5 }}
-          className="text-left mb-14"
-        >
-          <div className="inline-flex items-center gap-2 text-blue-400 text-xs font-mono font-semibold uppercase tracking-wider mb-2">
-            <span className="w-2 h-2 rounded-full bg-blue-400" />
-            <span>Developer Background &amp; Philosophy</span>
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight font-heading">
-            Engineering with Intent &amp; Curiosity
+      {/* 2. Bottom-Left: 3D Object */}
+      <div className="absolute bottom-[8%] left-[3%] sm:left-[6%] md:left-[10%] z-10 pointer-events-none">
+        <FadeIn delay={0.25} x={-80} y={0} duration={0.9}>
+          <img
+            src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/p59_1.4659672e.png"
+            alt="3D Shape Object"
+            referrerPolicy="no-referrer"
+            className="w-[100px] sm:w-[140px] md:w-[180px] h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)]"
+          />
+        </FadeIn>
+      </div>
+
+      {/* 3. Top-Right: Lego icon */}
+      <div className="absolute top-[4%] right-[1%] sm:right-[2%] md:right-[4%] z-10 pointer-events-none">
+        <FadeIn delay={0.15} x={80} y={0} duration={0.9}>
+          <img
+            src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/lego_icon-1.703bb594.png"
+            alt="3D Lego Object"
+            referrerPolicy="no-referrer"
+            className="w-[120px] sm:w-[160px] md:w-[210px] h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)]"
+          />
+        </FadeIn>
+      </div>
+
+      {/* 4. Bottom-Right: 3D Group */}
+      <div className="absolute bottom-[8%] right-[3%] sm:right-[6%] md:right-[10%] z-10 pointer-events-none">
+        <FadeIn delay={0.3} x={80} y={0} duration={0.9}>
+          <img
+            src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/Group_134-1.2e04f3ce.png"
+            alt="3D Group Geometric Object"
+            referrerPolicy="no-referrer"
+            className="w-[130px] sm:w-[170px] md:w-[220px] h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)]"
+          />
+        </FadeIn>
+      </div>
+
+      {/* Central Content Stack */}
+      <div className="relative z-20 flex flex-col items-center text-center max-w-4xl mx-auto">
+        {/* Section Heading */}
+        <FadeIn delay={0} y={40} duration={0.8}>
+          <h2
+            className="hero-heading font-black uppercase leading-none tracking-tight text-center"
+            style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}
+          >
+            About me
           </h2>
-          <p className="text-sm sm:text-base text-slate-400 mt-2 max-w-2xl">
-            A software engineering student's journey translating theory into resilient, production-grade applications.
-          </p>
-        </motion.div>
+        </FadeIn>
 
-        {/* Bento Split Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          {/* Left: Professional Biography & Philosophy (7 cols) */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.55 }}
-            className="lg:col-span-7 space-y-6"
-          >
-            {/* Biography Glass Panel */}
-            <div className="glass-panel p-6 sm:p-8 rounded-2xl space-y-4 border border-slate-800/90 shadow-xl">
-              <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2.5">
-                <div className="p-2 rounded-lg bg-blue-950/80 text-blue-400 border border-blue-800/40">
-                  <BookOpen className="w-4 h-4" />
-                </div>
-                <span>Professional Biography</span>
-              </h3>
-              
-              {about.biography.map((paragraph, idx) => (
-                <p key={idx} className="text-sm sm:text-base text-slate-300 leading-relaxed">
-                  {paragraph}
-                </p>
-              ))}
-
-              <div className="pt-5 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-4 rounded-xl bg-[#0e1420]/80 border border-slate-800/80">
-                  <div className="text-xs text-slate-400 font-mono uppercase tracking-wider">Target Focus</div>
-                  <div className="text-sm font-bold text-slate-100 mt-1">Full-Stack / Python / AI Products</div>
-                </div>
-                <div className="p-4 rounded-xl bg-[#0e1420]/80 border border-slate-800/80">
-                  <div className="text-xs text-slate-400 font-mono uppercase tracking-wider">Academic Standing</div>
-                  <div className="text-sm font-bold text-blue-400 mt-1">5th Semester, BS Software Eng.</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Engineering Philosophy Bento Card */}
-            <div className="glass-panel p-6 sm:p-8 rounded-2xl border-blue-500/20 relative overflow-hidden shadow-xl bg-gradient-to-br from-[#111722] to-[#0b0d12]">
-              <div className="flex items-center gap-2.5 text-blue-400 font-bold text-base mb-3">
-                <div className="p-2 rounded-lg bg-blue-950/90 text-blue-400 border border-blue-800/50">
-                  <Compass className="w-4 h-4" />
-                </div>
-                <h3 className="text-lg font-heading text-white">{about.engineeringPhilosophy.title}</h3>
-              </div>
-              <p className="text-sm text-slate-300 leading-relaxed mb-5">
-                {about.engineeringPhilosophy.description}
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {about.engineeringPhilosophy.coreValues.map((val, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-[#0e1420]/80 border border-slate-800 text-xs text-slate-200 font-medium hover:border-slate-700 transition-colors"
-                  >
-                    <CheckCircle className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-                    <span>{val}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Right: Key Milestones & Learning Frontiers (5 cols) */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.55, delay: 0.1 }}
-            className="lg:col-span-5 space-y-6"
-          >
-            {/* Quick Profile Cards */}
-            <div className="glass-panel p-6 sm:p-7 rounded-2xl space-y-4 border border-slate-800/90 shadow-xl">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
-                Key Coordinates &amp; Milestones
-              </h3>
-
-              <div className="space-y-3 text-sm">
-                <div className="flex items-center gap-3.5 p-3.5 rounded-xl bg-[#0e1420]/90 border border-slate-800/90 hover:border-slate-700 transition-colors">
-                  <div className="p-2.5 rounded-xl bg-blue-950 text-blue-400 border border-blue-900/50">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="text-xs text-slate-400 font-mono">Location</div>
-                    <div className="font-semibold text-slate-100">{about.location}</div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3.5 p-3.5 rounded-xl bg-[#0e1420]/90 border border-slate-800/90 hover:border-slate-700 transition-colors">
-                  <div className="p-2.5 rounded-xl bg-indigo-950 text-indigo-400 border border-indigo-900/50">
-                    <GraduationCap className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="text-xs text-slate-400 font-mono">Degree &amp; Institution</div>
-                    <div className="font-semibold text-slate-100">{about.degree}</div>
-                    <div className="text-xs text-blue-400 font-medium mt-0.5">{about.institution}</div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3.5 p-3.5 rounded-xl bg-[#0e1420]/90 border border-slate-800/90 hover:border-slate-700 transition-colors">
-                  <div className="p-2.5 rounded-xl bg-emerald-950 text-emerald-400 border border-emerald-900/50">
-                    <Clock className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="text-xs text-slate-400 font-mono">Hands-on Experience</div>
-                    <div className="font-semibold text-slate-100">{about.experienceYears}</div>
-                    <div className="text-xs text-emerald-400 font-medium">Freelance, Academic &amp; Project Builds</div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3.5 p-3.5 rounded-xl bg-[#0e1420]/90 border border-slate-800/90 hover:border-slate-700 transition-colors">
-                  <div className="p-2.5 rounded-xl bg-blue-950 text-blue-300 border border-blue-900/50">
-                    <Sparkles className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="text-xs text-slate-400 font-mono">Current Status</div>
-                    <div className="font-semibold text-slate-100">{about.semester} Active</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Currently Learning Interactive Pills */}
-            <div className="glass-panel p-6 sm:p-7 rounded-2xl border border-slate-800/90 shadow-xl">
-              <div className="flex items-center gap-2.5 text-blue-300 font-bold text-sm mb-4">
-                <div className="p-2 rounded-lg bg-blue-950/80 text-blue-400 border border-blue-900/40">
-                  <Cpu className="w-4 h-4" />
-                </div>
-                <h3 className="font-heading text-white text-base">Current Learning Frontiers</h3>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {about.learningFocus.map((focusItem, idx) => (
-                  <span
-                    key={idx}
-                    className="px-3.5 py-2 rounded-xl text-xs font-mono bg-[#0e1420] text-slate-200 border border-slate-800 hover:border-blue-500/40 hover:text-blue-300 transition-all shadow-sm"
-                  >
-                    {focusItem}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-          </motion.div>
-
+        {/* Gap between heading & text: gap-10 sm:gap-14 md:gap-16 */}
+        <div className="mt-10 sm:mt-14 md:mt-16 w-full flex justify-center">
+          <AnimatedText
+            text={aboutText}
+            className="text-[#D7E2EA] font-medium text-center leading-relaxed max-w-[560px]"
+            style={{ fontSize: 'clamp(1rem, 2vw, 1.35rem)' } as React.CSSProperties}
+          />
         </div>
 
+        {/* Gap between text block and button: gap-16 sm:gap-20 md:gap-24 */}
+        <div className="mt-16 sm:mt-20 md:mt-24">
+          <FadeIn delay={0.4} y={30} duration={0.8}>
+            <ContactButton label="Contact Me" href="#contact" />
+          </FadeIn>
+        </div>
       </div>
     </section>
   );

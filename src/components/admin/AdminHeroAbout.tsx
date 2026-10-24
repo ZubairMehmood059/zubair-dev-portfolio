@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
-import { Save, RefreshCw, User, BookOpen, Compass, Link2 } from 'lucide-react';
+import { Save, User, BookOpen, Link2 } from 'lucide-react';
 
 export const AdminHeroAbout: React.FC = () => {
   const { hero, about, updateHero, updateAbout, showToast } = usePortfolio();
@@ -28,19 +28,21 @@ export const AdminHeroAbout: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 font-['Kanit',sans-serif] text-[#D7E2EA]">
       {/* Top action header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-white font-heading">Hero &amp; Profile Editor</h2>
-          <p className="text-xs text-slate-400">
+          <h2 className="text-xl sm:text-2xl font-black uppercase text-white tracking-tight hero-heading">
+            Hero &amp; Profile Editor
+          </h2>
+          <p className="text-xs sm:text-sm text-[#BBCCD7]/70 font-light mt-1">
             Customize typography, headline copy, professional titles, social handles, and personal narrative.
           </p>
         </div>
 
         <button
           onClick={handleSaveAll}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-md shadow-cyan-500/20 transition-all"
+          className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#D7E2EA] hover:bg-white text-[#0C0C0C] font-bold text-xs uppercase tracking-wider shadow-md transition-all cursor-pointer self-start sm:self-auto"
         >
           <Save className="w-4 h-4" />
           <span>Save Profile Changes</span>
@@ -48,84 +50,98 @@ export const AdminHeroAbout: React.FC = () => {
       </div>
 
       {/* Hero Section Form */}
-      <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+      <div className="p-6 rounded-[28px] border border-white/10 bg-[#121212] space-y-4">
         <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-          <User className="w-4 h-4 text-cyan-400" />
+          <User className="w-4 h-4 text-[#D7E2EA]" />
           <span>Hero Identification &amp; Positioning</span>
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
           <div>
-            <label className="block text-slate-400 font-semibold mb-1">Full Name</label>
+            <label className="block text-[#BBCCD7] font-semibold mb-1 uppercase tracking-wider text-[11px]">
+              Full Name
+            </label>
             <input
               type="text"
               value={heroForm.name}
               onChange={(e) => setHeroForm({ ...heroForm, name: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500"
+              className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-[#D7E2EA]"
             />
           </div>
 
           <div>
-            <label className="block text-slate-400 font-semibold mb-1">Availability Status</label>
+            <label className="block text-[#BBCCD7] font-semibold mb-1 uppercase tracking-wider text-[11px]">
+              Availability Status
+            </label>
             <input
               type="text"
               value={heroForm.availabilityStatus}
               onChange={(e) => setHeroForm({ ...heroForm, availabilityStatus: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500"
+              className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-[#D7E2EA]"
             />
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-slate-400 font-semibold mb-1">Professional Title Line</label>
+            <label className="block text-[#BBCCD7] font-semibold mb-1 uppercase tracking-wider text-[11px]">
+              Professional Title Line
+            </label>
             <input
               type="text"
               value={heroForm.title}
               onChange={(e) => setHeroForm({ ...heroForm, title: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500"
+              className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-[#D7E2EA]"
             />
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-slate-400 font-semibold mb-1">Headline Statement</label>
+            <label className="block text-[#BBCCD7] font-semibold mb-1 uppercase tracking-wider text-[11px]">
+              Headline Statement
+            </label>
             <input
               type="text"
               value={heroForm.headline}
               onChange={(e) => setHeroForm({ ...heroForm, headline: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500"
+              className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-[#D7E2EA]"
             />
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-slate-400 font-semibold mb-1">Supporting Bio Paragraph</label>
+            <label className="block text-[#BBCCD7] font-semibold mb-1 uppercase tracking-wider text-[11px]">
+              Supporting Bio Paragraph
+            </label>
             <textarea
               rows={3}
               value={heroForm.supportingBio}
               onChange={(e) => setHeroForm({ ...heroForm, supportingBio: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500"
+              className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-[#D7E2EA]"
             />
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-slate-400 font-semibold mb-1">Portrait Avatar Image URL</label>
+            <label className="block text-[#BBCCD7] font-semibold mb-1 uppercase tracking-wider text-[11px]">
+              Portrait Avatar Image URL
+            </label>
             <input
               type="text"
               value={heroForm.avatarUrl}
               onChange={(e) => setHeroForm({ ...heroForm, avatarUrl: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500 font-mono"
+              className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-[#D7E2EA] font-mono"
             />
           </div>
         </div>
 
         {/* Social Handles */}
-        <div className="pt-4 border-t border-slate-800 space-y-3">
-          <h4 className="text-xs font-bold text-slate-300 font-mono flex items-center gap-1.5">
-            <Link2 className="w-3.5 h-3.5 text-cyan-400" />
+        <div className="pt-4 border-t border-white/10 space-y-3">
+          <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-1.5">
+            <Link2 className="w-3.5 h-3.5 text-[#D7E2EA]" />
             <span>Contact &amp; Social Links</span>
           </h4>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
-              <label className="block text-slate-400 font-semibold mb-1">Email Address</label>
+              <label className="block text-[#BBCCD7] font-semibold mb-1 uppercase tracking-wider text-[11px]">
+                Email Address
+              </label>
               <input
                 type="email"
                 value={heroForm.socials.email}
@@ -135,12 +151,14 @@ export const AdminHeroAbout: React.FC = () => {
                     socials: { ...heroForm.socials, email: e.target.value },
                   })
                 }
-                className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500"
+                className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-[#D7E2EA]"
               />
             </div>
 
             <div>
-              <label className="block text-slate-400 font-semibold mb-1">Phone Number</label>
+              <label className="block text-[#BBCCD7] font-semibold mb-1 uppercase tracking-wider text-[11px]">
+                Phone Number
+              </label>
               <input
                 type="text"
                 value={heroForm.socials.phone || ''}
@@ -150,12 +168,14 @@ export const AdminHeroAbout: React.FC = () => {
                     socials: { ...heroForm.socials, phone: e.target.value },
                   })
                 }
-                className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500"
+                className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-[#D7E2EA]"
               />
             </div>
 
             <div>
-              <label className="block text-slate-400 font-semibold mb-1">GitHub Profile URL</label>
+              <label className="block text-[#BBCCD7] font-semibold mb-1 uppercase tracking-wider text-[11px]">
+                GitHub Profile URL
+              </label>
               <input
                 type="text"
                 value={heroForm.socials.github}
@@ -165,12 +185,14 @@ export const AdminHeroAbout: React.FC = () => {
                     socials: { ...heroForm.socials, github: e.target.value },
                   })
                 }
-                className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500 font-mono"
+                className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-[#D7E2EA] font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-slate-400 font-semibold mb-1">LinkedIn Profile URL</label>
+              <label className="block text-[#BBCCD7] font-semibold mb-1 uppercase tracking-wider text-[11px]">
+                LinkedIn Profile URL
+              </label>
               <input
                 type="text"
                 value={heroForm.socials.linkedin}
@@ -180,7 +202,7 @@ export const AdminHeroAbout: React.FC = () => {
                     socials: { ...heroForm.socials, linkedin: e.target.value },
                   })
                 }
-                className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500 font-mono"
+                className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-[#D7E2EA] font-mono"
               />
             </div>
           </div>
@@ -188,47 +210,51 @@ export const AdminHeroAbout: React.FC = () => {
       </div>
 
       {/* About Section Form */}
-      <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+      <div className="p-6 rounded-[28px] border border-white/10 bg-[#121212] space-y-4">
         <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-          <BookOpen className="w-4 h-4 text-cyan-400" />
+          <BookOpen className="w-4 h-4 text-[#D7E2EA]" />
           <span>About &amp; Biography Narrative</span>
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
           <div>
-            <label className="block text-slate-400 font-semibold mb-1">Location</label>
+            <label className="block text-[#BBCCD7] font-semibold mb-1 uppercase tracking-wider text-[11px]">
+              Location
+            </label>
             <input
               type="text"
               value={aboutForm.location}
               onChange={(e) => setAboutForm({ ...aboutForm, location: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500"
+              className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-[#D7E2EA]"
             />
           </div>
 
           <div>
-            <label className="block text-slate-400 font-semibold mb-1">Experience Span</label>
+            <label className="block text-[#BBCCD7] font-semibold mb-1 uppercase tracking-wider text-[11px]">
+              Experience Span
+            </label>
             <input
               type="text"
               value={aboutForm.experienceYears}
               onChange={(e) => setAboutForm({ ...aboutForm, experienceYears: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500"
+              className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-[#D7E2EA]"
             />
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-slate-400 font-semibold mb-1">
+            <label className="block text-[#BBCCD7] font-semibold mb-1 uppercase tracking-wider text-[11px]">
               Biography Paragraphs (Separate paragraphs with double Enter)
             </label>
             <textarea
               rows={6}
               value={aboutForm.bioString}
               onChange={(e) => setAboutForm({ ...aboutForm, bioString: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500 leading-relaxed"
+              className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-[#D7E2EA] leading-relaxed"
             />
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-slate-400 font-semibold mb-1">
+            <label className="block text-[#BBCCD7] font-semibold mb-1 uppercase tracking-wider text-[11px]">
               Engineering Philosophy Summary
             </label>
             <textarea
@@ -243,19 +269,19 @@ export const AdminHeroAbout: React.FC = () => {
                   },
                 })
               }
-              className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500"
+              className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-[#D7E2EA]"
             />
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-slate-400 font-semibold mb-1">
+            <label className="block text-[#BBCCD7] font-semibold mb-1 uppercase tracking-wider text-[11px]">
               Philosophy Core Values (comma-separated)
             </label>
             <input
               type="text"
               value={aboutForm.philosophyValues}
               onChange={(e) => setAboutForm({ ...aboutForm, philosophyValues: e.target.value })}
-              className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-cyan-500"
+              className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white focus:outline-none focus:border-[#D7E2EA]"
             />
           </div>
         </div>
@@ -263,7 +289,7 @@ export const AdminHeroAbout: React.FC = () => {
         <div className="flex justify-end pt-3">
           <button
             onClick={handleSaveAll}
-            className="px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-md shadow-cyan-500/20"
+            className="px-5 py-2.5 rounded-full bg-[#D7E2EA] hover:bg-white text-[#0C0C0C] font-bold text-xs uppercase tracking-wider shadow-md cursor-pointer"
           >
             Save All Hero &amp; About Changes
           </button>

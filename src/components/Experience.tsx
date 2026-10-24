@@ -1,22 +1,12 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import {
-  Briefcase,
-  Calendar,
-  MapPin,
-  ChevronDown,
-  ChevronUp,
-  CheckCircle2,
-  ExternalLink,
-  Code2,
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { FadeIn } from './common/MotionComponents';
+import { Calendar, MapPin, Briefcase, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
 
 export const Experience: React.FC = () => {
   const { experience, isPreviewMode } = usePortfolio();
   const [expandedId, setExpandedId] = useState<string | null>('exp-1');
 
-  // Filter published unless in preview mode
   const visibleExp = experience.filter((exp) => isPreviewMode || exp.isPublished);
 
   const toggleExpand = (id: string) => {
@@ -24,144 +14,117 @@ export const Experience: React.FC = () => {
   };
 
   return (
-    <section id="experience" className="py-24 relative bg-[#090c13]/70 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header with Motion Reveal */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.5 }}
-          className="text-left mb-14"
-        >
-          <div className="inline-flex items-center gap-2 text-blue-400 text-xs font-mono font-semibold uppercase tracking-wider mb-2">
-            <span className="w-2 h-2 rounded-full bg-blue-400" />
-            <span>Career &amp; Practical Work</span>
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight font-heading">
-            Work Experience
+    <section
+      id="experience"
+      className="bg-[#0C0C0C] text-[#D7E2EA] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32 relative z-10 select-none overflow-hidden"
+    >
+      <div className="max-w-6xl mx-auto">
+        {/* Section Heading */}
+        <FadeIn delay={0} y={40} duration={0.8}>
+          <h2
+            className="hero-heading font-black uppercase text-center leading-none tracking-tight mb-4 sm:mb-6"
+            style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}
+          >
+            Experience
           </h2>
-          <p className="text-sm sm:text-base text-slate-400 mt-2 max-w-xl">
-            Contract and freelance client delivery specializing in responsive frontend interfaces, user logic, and dependable deployments.
+          <p className="text-center text-[#D7E2EA]/70 font-light max-w-2xl mx-auto uppercase tracking-wide text-xs sm:text-sm md:text-base mb-14 sm:mb-20">
+            Professional software development track record, client contracts, responsive frontend engineering, and deployment delivery.
           </p>
-        </motion.div>
+        </FadeIn>
 
-        {/* Timeline Container */}
-        <div className="relative border-l-2 border-slate-800/90 ml-4 sm:ml-8 space-y-8">
+        {/* Experience Cards */}
+        <div className="flex flex-col gap-10">
           {visibleExp.map((exp, index) => {
             const isExpanded = expandedId === exp.id;
-            return (
-              <motion.div
-                key={exp.id}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="relative pl-6 sm:pl-8 group"
-              >
-                
-                {/* Timeline node icon */}
-                <div className="absolute -left-[17px] top-1.5 w-8 h-8 rounded-full bg-[#0b0d12] border-2 border-blue-500 flex items-center justify-center text-blue-400 shadow-md shadow-blue-500/30 group-hover:scale-110 transition-transform">
-                  <Briefcase className="w-3.5 h-3.5" />
-                </div>
+            const numberFormatted = `0${index + 1}`;
 
-                {/* Content Card */}
-                <div className="glass-panel p-6 sm:p-8 rounded-2xl border border-slate-800/90 transition-all hover:border-blue-500/40 shadow-xl bg-[#0e1420]/80">
-                  
-                  {/* Top Bar */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                      <div className="flex items-center gap-2.5">
-                        <h3 className="text-lg sm:text-xl font-bold text-white font-heading">
+            return (
+              <FadeIn key={exp.id} delay={index * 0.15} y={30} duration={0.8}>
+                <div className="w-full rounded-[40px] sm:rounded-[50px] md:rounded-[60px] border-2 border-[#D7E2EA] bg-[#0C0C0C] p-6 sm:p-10 md:p-12 shadow-[0_25px_60px_rgba(0,0,0,0.9)] hover:border-white transition-all duration-300">
+                  {/* Top Bar: Huge number, role, company, period */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-white/10">
+                    <div className="flex items-center gap-4 sm:gap-6">
+                      <span
+                        className="font-black text-[#D7E2EA] leading-none shrink-0"
+                        style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)' }}
+                      >
+                        {numberFormatted}
+                      </span>
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-mono uppercase tracking-widest text-[#BBCCD7]/70">
+                            {exp.type}
+                          </span>
+                          <span className="text-white/20">•</span>
+                          <span className="text-xs font-mono text-[#BBCCD7]/70 flex items-center gap-1">
+                            <MapPin className="w-3 h-3 text-[#D7E2EA]" />
+                            {exp.location}
+                          </span>
+                        </div>
+                        <h3
+                          className="font-bold uppercase text-white tracking-tight"
+                          style={{ fontSize: 'clamp(1.2rem, 2.5vw, 2rem)' }}
+                        >
                           {exp.role}
                         </h3>
-                        {!exp.isPublished && (
-                          <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-950 text-amber-300 border border-amber-800">
-                            Draft
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-sm font-semibold text-blue-400 mt-0.5">
-                        {exp.company}
+                        <p className="text-sm font-medium uppercase tracking-wider text-[#BBCCD7]">
+                          {exp.company}
+                        </p>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3 text-xs text-slate-400 font-mono">
-                      <span className="flex items-center gap-1.5 bg-[#111722] px-3 py-1 rounded-xl border border-slate-800 text-slate-300">
-                        <Calendar className="w-3.5 h-3.5 text-blue-400" />
-                        {exp.period}
-                      </span>
-                      <span className="flex items-center gap-1.5 bg-[#111722] px-3 py-1 rounded-xl border border-slate-800 text-slate-300">
-                        <MapPin className="w-3.5 h-3.5 text-blue-400" />
-                        {exp.location}
+                    <div className="flex items-center gap-3 self-start sm:self-center">
+                      <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider border border-[#D7E2EA]/40 text-[#D7E2EA] bg-white/5">
+                        <Calendar className="w-3.5 h-3.5" />
+                        <span>{exp.period}</span>
                       </span>
                     </div>
                   </div>
 
                   {/* Summary */}
-                  <p className="text-sm text-slate-300 mt-3.5 leading-relaxed">
+                  <p className="text-sm sm:text-base text-[#D7E2EA]/80 font-light mt-6 mb-8 leading-relaxed max-w-4xl">
                     {exp.description}
                   </p>
 
-                  {/* Technologies */}
-                  <div className="flex flex-wrap gap-1.5 mt-4">
-                    {exp.technologies.map((tech, idx) => (
+                  {/* Verified Engineering Responsibilities */}
+                  <div className="space-y-3 mb-8">
+                    <h4 className="text-xs font-mono uppercase tracking-widest text-[#BBCCD7]/70 mb-3">
+                      Key Engineering Responsibilities:
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {exp.responsibilities.map((resp, rIdx) => (
+                        <div
+                          key={rIdx}
+                          className="p-3.5 rounded-[20px] bg-[#141414] border border-white/10 flex items-start gap-3"
+                        >
+                          <CheckCircle2 className="w-4 h-4 text-[#D7E2EA] shrink-0 mt-0.5" />
+                          <span className="text-xs sm:text-sm text-[#D7E2EA]/90 font-light leading-relaxed">
+                            {resp}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Technologies Stack */}
+                  <div className="pt-6 border-t border-white/10 flex flex-wrap items-center gap-2">
+                    <span className="text-xs font-mono uppercase tracking-wider text-[#BBCCD7]/60 mr-2">
+                      Stack:
+                    </span>
+                    {exp.technologies.map((tech) => (
                       <span
-                        key={idx}
-                        className="px-2.5 py-1 rounded-lg text-xs font-mono bg-[#111722] text-slate-300 border border-slate-800"
+                        key={tech}
+                        className="px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-wider border border-[#D7E2EA]/30 text-[#D7E2EA] bg-white/5"
                       >
                         {tech}
                       </span>
                     ))}
                   </div>
-
-                  {/* Expand Toggle */}
-                  <div className="pt-4 mt-5 border-t border-slate-800/80 flex items-center justify-between">
-                    <button
-                      onClick={() => toggleExpand(exp.id)}
-                      className="flex items-center gap-1.5 text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
-                      aria-expanded={isExpanded}
-                    >
-                      <span>{isExpanded ? 'Hide Key Responsibilities' : 'View Key Responsibilities & Highlights'}</span>
-                      {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                    </button>
-                    <span className="text-[11px] text-slate-500 font-mono">{exp.type}</span>
-                  </div>
-
-                  {/* Expandable Details */}
-                  <AnimatePresence>
-                    {isExpanded && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.25 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="pt-4 mt-2 space-y-2.5 border-t border-slate-800/60">
-                          <h4 className="text-xs font-mono uppercase tracking-wider text-slate-400">
-                            Documented Scope &amp; Responsibilities:
-                          </h4>
-                          <ul className="space-y-2">
-                            {exp.responsibilities.map((resp, idx) => (
-                              <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-300 leading-relaxed">
-                                <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                                <span>{resp}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
                 </div>
-              </motion.div>
+              </FadeIn>
             );
           })}
         </div>
-
       </div>
     </section>
   );

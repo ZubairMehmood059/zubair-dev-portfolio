@@ -181,7 +181,7 @@ VITE_ADMIN_DEFAULT_PASSWORD="zubair2026"
 # Contact Form Integration (Optional)
 # Optional webhook or API endpoint to receive submitted messages
 VITE_CONTACT_API_ENDPOINT=""
-VITE_CONTACT_RECEIVER_EMAIL="itszayn1379@gmail.com"
+VITE_CONTACT_RECEIVER_EMAIL="zubair.dev@example.com"
 ```
 
 ---

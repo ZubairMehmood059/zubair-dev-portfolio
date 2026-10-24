@@ -4,18 +4,15 @@ import {
   Mail,
   Phone,
   MapPin,
-  Send,
   CheckCircle2,
   AlertCircle,
   Copy,
   Clock,
   Sparkles,
   ShieldCheck,
-  MessageSquare,
-  RotateCw,
-  Lock,
+  Send,
 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { FadeIn, ContactButton } from './common/MotionComponents';
 
 export const Contact: React.FC = () => {
   const { hero, about, submitContactMessage, showToast } = usePortfolio();
@@ -25,26 +22,18 @@ export const Contact: React.FC = () => {
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
-  const [honeypot, setHoneypot] = useState(''); // Hidden honeypot for bot detection
 
-  // Bot timing shield
-  const [formLoadTimestamp] = useState<number>(() => Date.now());
+  // Honeypot anti-spam field & rate limiting
+  const [honeypotWebsite, setHoneypotWebsite] = useState('');
+  const [lastSubmitTime, setLastSubmitTime] = useState<number>(0);
 
-  // Dynamic anti-spam math challenge
-  const generateMathQuestion = () => {
-    const num1 = Math.floor(Math.random() * 6) + 3;
-    const num2 = Math.floor(Math.random() * 5) + 2;
-    return { q: `${num1} + ${num2}`, ans: num1 + num2 };
-  };
-
+  // Anti-spam math challenge
   const [challengeAnswer, setChallengeAnswer] = useState('');
-  const [mathQuestion, setMathQuestion] = useState(generateMathQuestion);
-
-  // Refresh challenge
-  const handleRefreshMath = () => {
-    setMathQuestion(generateMathQuestion());
-    setChallengeAnswer('');
-  };
+  const [mathQuestion] = useState(() => {
+    const num1 = Math.floor(Math.random() * 5) + 3;
+    const num2 = Math.floor(Math.random() * 4) + 2;
+    return { q: `${num1} + ${num2}`, ans: num1 + num2 };
+  });
 
   // States
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -62,33 +51,20 @@ export const Contact: React.FC = () => {
     e.preventDefault();
     setErrorMessage('');
 
-    // Honeypot Bot Trap Check
-    if (honeypot.trim() !== '') {
-      // Silently discard automated bot submission
+    // Honeypot spam trap
+    if (honeypotWebsite.trim().length > 0) {
+      // Quietly reject bot
       setStatus('success');
+      showToast('Your message has been processed.');
       return;
     }
 
-    // Timing Shield (Submissions under 2 seconds are automated script bots)
-    if (Date.now() - formLoadTimestamp < 2000) {
-      setErrorMessage('Submission was rejected by BotShield (automated speed detected). Please try again.');
+    // Rate limiting: 20-second cooldown between submissions
+    const now = Date.now();
+    if (now - lastSubmitTime < 20000) {
+      setErrorMessage('Please wait 20 seconds before sending another message.');
       setStatus('error');
       return;
-    }
-
-    // Rate Limiting (Max 3 submissions per 10 minutes)
-    try {
-      const historyStr = localStorage.getItem('zubair_contact_ratelimit');
-      const now = Date.now();
-      const history: number[] = historyStr ? JSON.parse(historyStr) : [];
-      const recent = history.filter((t) => now - t < 10 * 60 * 1000);
-      if (recent.length >= 3) {
-        setErrorMessage('Rate limit reached: Maximum 3 transmissions per 10 minutes. Please email directly.');
-        setStatus('error');
-        return;
-      }
-    } catch {
-      // localStorage fallback
     }
 
     // Form Validation
@@ -97,8 +73,7 @@ export const Contact: React.FC = () => {
       setStatus('error');
       return;
     }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email.trim())) {
+    if (!email.trim() || !email.includes('@') || !email.includes('.')) {
       setErrorMessage('Please provide a valid email address.');
       setStatus('error');
       return;
@@ -109,14 +84,15 @@ export const Contact: React.FC = () => {
       return;
     }
 
-    // Anti-spam math verification check
+    // Anti-spam math check
     if (parseInt(challengeAnswer.trim(), 10) !== mathQuestion.ans) {
-      setErrorMessage('Anti-spam math challenge answer is incorrect. Please try again.');
+      setErrorMessage('Anti-spam security verification incorrect. Please try again.');
       setStatus('error');
       return;
     }
 
     setStatus('loading');
+    setLastSubmitTime(now);
 
     try {
       const res = await submitContactMessage({
@@ -127,346 +103,312 @@ export const Contact: React.FC = () => {
       });
 
       if (res.success) {
-        // Record rate limit timestamp
-        try {
-          const historyStr = localStorage.getItem('zubair_contact_ratelimit');
-          const history: number[] = historyStr ? JSON.parse(historyStr) : [];
-          history.push(Date.now());
-          localStorage.setItem('zubair_contact_ratelimit', JSON.stringify(history));
-        } catch {
-          // ignore
-        }
-
         setStatus('success');
         setName('');
         setEmail('');
         setSubject('');
         setMessage('');
         setChallengeAnswer('');
-        showToast('Your message has been verified and securely logged to Zubair’s inbox!');
+        showToast('Your message has been sent to Zubair and recorded in the inbox!');
       } else {
         setStatus('error');
         setErrorMessage(res.error || 'Failed to submit message.');
       }
     } catch {
       setStatus('error');
-      setErrorMessage('Network exception occurred. Please email itszayn1379@gmail.com directly.');
+      setErrorMessage('Network exception occurred. Please email directly.');
     }
   };
 
   return (
-    <section id="contact" className="py-24 relative bg-[#090c13]/70 overflow-hidden">
-      {/* Background ambient lighting */}
-      <div
-        style={{ background: 'radial-gradient(circle, rgba(79,140,255,0.12) 0%, rgba(11,13,18,0) 70%)' }}
-        className="absolute top-1/2 right-10 w-[500px] h-[500px] rounded-full blur-3xl pointer-events-none -z-10"
-      />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* Section Header with Motion Reveal */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.5 }}
-          className="text-left mb-14"
-        >
-          <div className="inline-flex items-center gap-2 text-blue-400 text-xs font-mono font-semibold uppercase tracking-wider mb-2">
-            <span className="w-2 h-2 rounded-full bg-blue-400" />
-            <span>Initiate Direct Dialogue</span>
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight font-heading">
-            Get In Touch
+    <section
+      id="contact"
+      className="bg-[#0C0C0C] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 sm:-mt-12 md:-mt-14 relative z-10 px-5 sm:px-8 md:px-10 pt-20 sm:pt-24 md:pt-32 pb-24"
+    >
+      <div className="max-w-6xl mx-auto">
+        {/* Section Heading */}
+        <FadeIn delay={0} y={40} duration={0.8}>
+          <h2
+            className="hero-heading font-black uppercase text-center leading-none tracking-tight mb-6 sm:mb-8"
+            style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}
+          >
+            Contact
           </h2>
-          <p className="text-sm sm:text-base text-slate-400 mt-2 max-w-xl">
-            Whether inquiring about software roles, technical collaborations, or engineering projects, drop a note below or reach out directly.
+          <p className="text-[#D7E2EA] font-medium text-center leading-relaxed max-w-[560px] mx-auto mb-16 sm:mb-20 text-sm sm:text-base md:text-lg">
+            Have a project in mind, an engineering collaboration, or an opportunity to build together? Drop a line below or reach out directly.
           </p>
-        </motion.div>
+        </FadeIn>
 
-        {/* Contact Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          {/* Left: Contact Coordinates & Details (5 cols) */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.5 }}
-            className="lg:col-span-5 space-y-4"
-          >
-            {/* Direct Email Card */}
-            <div className="glass-panel p-5 sm:p-6 rounded-2xl border border-slate-800/90 flex items-start justify-between gap-4 bg-[#0e1420]/80 shadow-xl hover:border-blue-500/40 transition-colors">
-              <div className="flex items-start gap-3.5">
-                <div className="p-3 rounded-xl bg-blue-950 text-blue-400 border border-blue-900/50 mt-0.5">
-                  <Mail className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="text-xs text-slate-400 font-mono">Direct Email</div>
-                  <a
-                    href={`mailto:${hero.socials.email}`}
-                    className="font-bold text-white hover:text-blue-300 text-sm mt-0.5 block break-all font-sans"
-                  >
-                    {hero.socials.email}
-                  </a>
-                  <span className="text-[11px] text-slate-500 font-mono mt-0.5 block">
-                    Fast response within 24 hours
-                  </span>
-                </div>
-              </div>
-
-              <button
-                onClick={() => handleCopy(hero.socials.email, 'Email')}
-                className="p-2.5 rounded-xl bg-[#111722] hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer border border-slate-800"
-                title="Copy email address"
-              >
-                {copiedField === 'Email' ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                ) : (
-                  <Copy className="w-4 h-4" />
-                )}
-              </button>
-            </div>
-
-            {/* Phone Card */}
-            <div className="glass-panel p-5 sm:p-6 rounded-2xl border border-slate-800/90 flex items-start justify-between gap-4 bg-[#0e1420]/80 shadow-xl hover:border-blue-500/40 transition-colors">
-              <div className="flex items-start gap-3.5">
-                <div className="p-3 rounded-xl bg-indigo-950 text-indigo-400 border border-indigo-900/50 mt-0.5">
-                  <Phone className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="text-xs text-slate-400 font-mono">Telephone / WhatsApp</div>
-                  <a
-                    href={`tel:${hero.socials.phone}`}
-                    className="font-bold text-white hover:text-blue-300 text-sm mt-0.5 block font-mono"
-                  >
-                    {hero.socials.phone}
-                  </a>
-                  <span className="text-[11px] text-slate-500 font-mono mt-0.5 block">
-                    Available for professional calls
-                  </span>
-                </div>
-              </div>
-
-              <button
-                onClick={() => handleCopy(hero.socials.phone || '', 'Phone')}
-                className="p-2.5 rounded-xl bg-[#111722] hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer border border-slate-800"
-                title="Copy phone number"
-              >
-                {copiedField === 'Phone' ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                ) : (
-                  <Copy className="w-4 h-4" />
-                )}
-              </button>
-            </div>
-
-            {/* Location Card */}
-            <div className="glass-panel p-5 sm:p-6 rounded-2xl border border-slate-800/90 flex items-start gap-3.5 bg-[#0e1420]/80 shadow-xl">
-              <div className="p-3 rounded-xl bg-emerald-950 text-emerald-400 border border-emerald-900/50 mt-0.5">
-                <MapPin className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="text-xs text-slate-400 font-mono">Location &amp; Timezone</div>
-                <div className="font-bold text-white text-sm mt-0.5">{about.location}</div>
-                <span className="text-[11px] text-slate-400 font-mono mt-1 flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-blue-400" /> Pakistan Standard Time (PKT, UTC+5)
-                </span>
-              </div>
-            </div>
-
-            {/* Quick Note Card */}
-            <div className="p-5 rounded-2xl bg-blue-950/20 border border-blue-800/30 text-xs text-slate-300 leading-relaxed space-y-2">
-              <div className="font-bold text-blue-300 flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4" />
-                <span>Admin Inbox Enabled</span>
-              </div>
-              <p>
-                Messages sent via this form persist instantly into my private, authenticated Admin Inbox dashboard with full sender metadata.
-              </p>
-            </div>
-
-          </motion.div>
-
-          {/* Right: Interactive Contact Form (7 cols) */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="lg:col-span-7"
-          >
-            <div className="glass-panel p-6 sm:p-8 rounded-2xl border border-slate-800/90 shadow-2xl bg-[#0e1420]/90">
+        {/* Outer Signature Card Container */}
+        <FadeIn delay={0.2} y={30} duration={0.8}>
+          <div className="rounded-[40px] sm:rounded-[50px] md:rounded-[60px] border-2 border-[#D7E2EA] bg-[#0C0C0C] p-6 sm:p-10 md:p-12 shadow-[0_25px_60px_rgba(0,0,0,0.9)]">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
               
-              {status === 'success' ? (
-                <div className="py-12 text-center space-y-4 animate-in fade-in">
-                  <div className="w-16 h-16 rounded-full bg-emerald-950 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/20">
-                    <CheckCircle2 className="w-8 h-8" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white font-heading">
-                    Message Dispatched Successfully!
+              {/* Left Column: Direct Coordinates (5 cols) */}
+              <div className="lg:col-span-5 space-y-4">
+                <div className="border-b border-white/10 pb-4 mb-6">
+                  <span className="text-xs font-mono uppercase tracking-widest text-[#BBCCD7]/70">
+                    Direct Coordinates
+                  </span>
+                  <h3 className="text-2xl font-bold uppercase text-white tracking-tight mt-1">
+                    Let&apos;s Connect
                   </h3>
-                  <p className="text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
-                    Thank you for reaching out. Your transmission has been logged to Zubair&apos;s admin inbox. You will receive a response shortly.
-                  </p>
-                  <button
-                    onClick={() => setStatus('idle')}
-                    className="mt-4 px-6 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-colors cursor-pointer"
-                  >
-                    Send Another Message
-                  </button>
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  {status === 'error' && (
-                    <div className="p-3.5 rounded-xl bg-rose-950/80 border border-rose-800/60 text-rose-200 text-xs flex items-center gap-2">
-                      <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
-                      <span>{errorMessage}</span>
+
+                {/* Email Card */}
+                <div className="p-5 rounded-[24px] bg-[#161616] border border-white/10 flex items-start justify-between gap-4 transition-all hover:border-white/30">
+                  <div className="flex items-start gap-3.5">
+                    <div className="p-3 rounded-2xl bg-white/5 text-[#D7E2EA] mt-0.5">
+                      <Mail className="w-5 h-5" />
                     </div>
-                  )}
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* Name */}
-                    <div className="space-y-1.5 text-left">
-                      <label htmlFor="contact-name" className="text-xs font-semibold text-slate-300">
-                        Your Name <span className="text-blue-400">*</span>
-                      </label>
-                      <input
-                        id="contact-name"
-                        type="text"
-                        required
-                        placeholder="e.g. Alex Henderson"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#111722] border border-slate-700/80 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all shadow-inner"
-                      />
-                    </div>
-
-                    {/* Email */}
-                    <div className="space-y-1.5 text-left">
-                      <label htmlFor="contact-email" className="text-xs font-semibold text-slate-300">
-                        Your Email <span className="text-blue-400">*</span>
-                      </label>
-                      <input
-                        id="contact-email"
-                        type="email"
-                        required
-                        placeholder="alex@company.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#111722] border border-slate-700/80 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all shadow-inner"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Subject */}
-                  <div className="space-y-1.5 text-left">
-                    <label htmlFor="contact-subject" className="text-xs font-semibold text-slate-300">
-                      Subject
-                    </label>
-                    <input
-                      id="contact-subject"
-                      type="text"
-                      placeholder="Project Opportunity / Technical Collaboration"
-                      value={subject}
-                      onChange={(e) => setSubject(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#111722] border border-slate-700/80 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all shadow-inner"
-                    />
-                  </div>
-
-                  {/* Message */}
-                  <div className="space-y-1.5 text-left">
-                    <label htmlFor="contact-message" className="text-xs font-semibold text-slate-300">
-                      Message Content <span className="text-blue-400">*</span>
-                    </label>
-                    <textarea
-                      id="contact-message"
-                      required
-                      rows={5}
-                      placeholder="Describe your project, question, or role in detail..."
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#111722] border border-slate-700/80 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-y shadow-inner"
-                    />
-                  </div>
-
-                  {/* Invisible Honeypot Field for Automated Bot Trapping */}
-                  <div className="hidden" aria-hidden="true" style={{ display: 'none' }}>
-                    <label htmlFor="bot_hp_check">Leave this field blank</label>
-                    <input
-                      id="bot_hp_check"
-                      type="text"
-                      name="bot_hp_check"
-                      value={honeypot}
-                      onChange={(e) => setHoneypot(e.target.value)}
-                      tabIndex={-1}
-                      autoComplete="off"
-                    />
-                  </div>
-
-                  {/* Anti-Spam Math Challenge with Refresh Button */}
-                  <div className="p-3.5 rounded-xl bg-[#111722] border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-                    <div className="flex items-center gap-2 text-slate-300">
-                      <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>Security Verification: Solve <strong>{mathQuestion.q} = ?</strong></span>
-                      <button
-                        type="button"
-                        onClick={handleRefreshMath}
-                        className="p-1 rounded text-slate-400 hover:text-blue-400 transition-colors"
-                        title="Generate a new question"
-                        aria-label="Generate new security question"
+                    <div>
+                      <div className="text-xs text-[#BBCCD7]/70 uppercase font-mono tracking-wider">
+                        Email Address
+                      </div>
+                      <a
+                        href={`mailto:${hero.socials.email}`}
+                        className="font-medium text-white hover:text-[#BBCCD7] text-sm sm:text-base mt-0.5 block break-all"
                       >
-                        <RotateCw className="w-3.5 h-3.5" />
-                      </button>
+                        {hero.socials.email}
+                      </a>
+                      <span className="text-[11px] text-[#BBCCD7]/50 font-mono mt-0.5 block">
+                        Fast response within 24 hours
+                      </span>
                     </div>
-
-                    <input
-                      type="text"
-                      required
-                      placeholder="Answer"
-                      value={challengeAnswer}
-                      onChange={(e) => setChallengeAnswer(e.target.value)}
-                      className="w-24 px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-center text-xs text-white focus:outline-none focus:border-blue-500 font-mono"
-                    />
                   </div>
 
-                  {/* Submit Button */}
                   <button
-                    type="submit"
-                    disabled={status === 'loading'}
-                    style={{
-                      background: 'var(--accent-gradient)',
-                      color: 'var(--accent-text-contrast, #ffffff)',
-                      boxShadow: '0 6px 20px var(--accent-glow)',
-                    }}
-                    className="w-full py-3.5 px-6 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99] hover:brightness-110 disabled:opacity-50 cursor-pointer shadow-lg"
+                    type="button"
+                    onClick={() => handleCopy(hero.socials.email, 'Email')}
+                    className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 text-[#D7E2EA] transition-colors cursor-pointer"
+                    title="Copy email address"
                   >
-                    {status === 'loading' ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                        <span>Transmitting Message...</span>
-                      </>
+                    {copiedField === 'Email' ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                     ) : (
-                      <>
-                        <Send className="w-4 h-4" />
-                        <span>Send Message</span>
-                      </>
+                      <Copy className="w-4 h-4" />
                     )}
                   </button>
+                </div>
 
-                  {/* Security Assurance Badge */}
-                  <div className="pt-2 flex items-center justify-center gap-2 text-[11px] text-slate-400 font-mono">
-                    <Lock className="w-3 h-3 text-emerald-400" />
-                    <span>Protected by BotShield™ Anti-Spam &amp; End-to-End Delivery</span>
+                {/* Phone Card */}
+                <div className="p-5 rounded-[24px] bg-[#161616] border border-white/10 flex items-start justify-between gap-4 transition-all hover:border-white/30">
+                  <div className="flex items-start gap-3.5">
+                    <div className="p-3 rounded-2xl bg-white/5 text-[#D7E2EA] mt-0.5">
+                      <Phone className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-xs text-[#BBCCD7]/70 uppercase font-mono tracking-wider">
+                        Telephone / WhatsApp
+                      </div>
+                      <a
+                        href={`tel:${hero.socials.phone}`}
+                        className="font-medium text-white hover:text-[#BBCCD7] text-sm sm:text-base mt-0.5 block font-mono"
+                      >
+                        {hero.socials.phone}
+                      </a>
+                      <span className="text-[11px] text-[#BBCCD7]/50 font-mono mt-0.5 block">
+                        Available for calls &amp; inquiries
+                      </span>
+                    </div>
                   </div>
-                </form>
-              )}
+
+                  <button
+                    type="button"
+                    onClick={() => handleCopy(hero.socials.phone || '', 'Phone')}
+                    className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 text-[#D7E2EA] transition-colors cursor-pointer"
+                    title="Copy phone number"
+                  >
+                    {copiedField === 'Phone' ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    ) : (
+                      <Copy className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+
+                {/* Location Card */}
+                <div className="p-5 rounded-[24px] bg-[#161616] border border-white/10 flex items-start gap-3.5">
+                  <div className="p-3 rounded-2xl bg-white/5 text-[#D7E2EA] mt-0.5">
+                    <MapPin className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="text-xs text-[#BBCCD7]/70 uppercase font-mono tracking-wider">
+                      Location &amp; Timezone
+                    </div>
+                    <div className="font-medium text-white text-sm sm:text-base mt-0.5">
+                      {about.location}
+                    </div>
+                    <span className="text-[11px] text-[#BBCCD7]/50 font-mono mt-0.5 block flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-[#BBCCD7]" /> Pakistan Standard Time (PKT, UTC+5)
+                    </span>
+                  </div>
+                </div>
+
+                {/* Verified Transmission Notice */}
+                <div className="p-4 rounded-[20px] bg-white/[0.03] border border-white/10 text-xs text-[#BBCCD7]/80 leading-relaxed flex items-center gap-2.5">
+                  <Sparkles className="w-4 h-4 text-[#D7E2EA] shrink-0" />
+                  <span>Submissions are encrypted and dispatched directly to Zubair&apos;s verified inbox.</span>
+                </div>
+              </div>
+
+              {/* Right Column: Transmission Form (7 cols) */}
+              <div className="lg:col-span-7">
+                {status === 'success' ? (
+                  <div className="py-12 px-6 rounded-[32px] bg-[#161616] border border-white/10 text-center space-y-4">
+                    <div className="w-16 h-16 rounded-full bg-white/10 border border-[#D7E2EA] text-[#D7E2EA] flex items-center justify-center mx-auto shadow-xl">
+                      <CheckCircle2 className="w-8 h-8" />
+                    </div>
+                    <h3 className="text-2xl font-bold uppercase text-white tracking-tight">
+                      Message Dispatched!
+                    </h3>
+                    <p className="text-sm text-[#D7E2EA]/80 max-w-md mx-auto leading-relaxed">
+                      Thank you for reaching out. Your transmission has been safely logged. I will respond to your inquiry shortly.
+                    </p>
+                    <div className="pt-4">
+                      <button
+                        type="button"
+                        onClick={() => setStatus('idle')}
+                        className="inline-flex items-center justify-center rounded-full border-2 border-[#D7E2EA] px-8 py-3 text-sm font-medium uppercase tracking-widest text-[#D7E2EA] hover:bg-white/10 transition-colors cursor-pointer"
+                      >
+                        Send Another Message
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Hidden Honeypot Anti-Bot Field */}
+                    <div className="hidden" aria-hidden="true">
+                      <label htmlFor="website-trap">Do not fill this field</label>
+                      <input
+                        id="website-trap"
+                        type="text"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={honeypotWebsite}
+                        onChange={(e) => setHoneypotWebsite(e.target.value)}
+                      />
+                    </div>
+                    {status === 'error' && (
+                      <div className="p-4 rounded-2xl bg-rose-950/60 border border-rose-500/40 text-rose-200 text-xs sm:text-sm flex items-center gap-2.5">
+                        <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                        <span>{errorMessage}</span>
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Name */}
+                      <div className="space-y-1.5 text-left">
+                        <label htmlFor="contact-name" className="text-xs uppercase tracking-wider font-mono text-[#BBCCD7]">
+                          Your Name <span className="text-rose-400">*</span>
+                        </label>
+                        <input
+                          id="contact-name"
+                          type="text"
+                          required
+                          placeholder="e.g. Alex Henderson"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          className="w-full px-5 py-3.5 rounded-2xl bg-[#161616] border border-white/10 text-sm text-[#D7E2EA] placeholder-white/30 focus:outline-none focus:border-[#D7E2EA] transition-all"
+                        />
+                      </div>
+
+                      {/* Email */}
+                      <div className="space-y-1.5 text-left">
+                        <label htmlFor="contact-email" className="text-xs uppercase tracking-wider font-mono text-[#BBCCD7]">
+                          Your Email <span className="text-rose-400">*</span>
+                        </label>
+                        <input
+                          id="contact-email"
+                          type="email"
+                          required
+                          placeholder="alex@company.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full px-5 py-3.5 rounded-2xl bg-[#161616] border border-white/10 text-sm text-[#D7E2EA] placeholder-white/30 focus:outline-none focus:border-[#D7E2EA] transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Subject */}
+                    <div className="space-y-1.5 text-left">
+                      <label htmlFor="contact-subject" className="text-xs uppercase tracking-wider font-mono text-[#BBCCD7]">
+                        Subject
+                      </label>
+                      <input
+                        id="contact-subject"
+                        type="text"
+                        placeholder="Project Inquiry / Technical Collaboration"
+                        value={subject}
+                        onChange={(e) => setSubject(e.target.value)}
+                        className="w-full px-5 py-3.5 rounded-2xl bg-[#161616] border border-white/10 text-sm text-[#D7E2EA] placeholder-white/30 focus:outline-none focus:border-[#D7E2EA] transition-all"
+                      />
+                    </div>
+
+                    {/* Message */}
+                    <div className="space-y-1.5 text-left">
+                      <label htmlFor="contact-message" className="text-xs uppercase tracking-wider font-mono text-[#BBCCD7]">
+                        Message Details <span className="text-rose-400">*</span>
+                      </label>
+                      <textarea
+                        id="contact-message"
+                        required
+                        rows={4}
+                        placeholder="Describe your project, timeline, or inquiry..."
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        className="w-full px-5 py-3.5 rounded-2xl bg-[#161616] border border-white/10 text-sm text-[#D7E2EA] placeholder-white/30 focus:outline-none focus:border-[#D7E2EA] transition-all resize-y"
+                      />
+                    </div>
+
+                    {/* Anti-Spam Security Challenge */}
+                    <div className="p-4 rounded-2xl bg-[#161616] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-sm">
+                      <div className="flex items-center gap-2 text-[#BBCCD7]">
+                        <ShieldCheck className="w-4 h-4 text-[#D7E2EA] shrink-0" />
+                        <span>Security Challenge: Solve <strong>{mathQuestion.q} = ?</strong></span>
+                      </div>
+
+                      <input
+                        type="text"
+                        required
+                        placeholder="Answer"
+                        value={challengeAnswer}
+                        onChange={(e) => setChallengeAnswer(e.target.value)}
+                        className="w-24 px-4 py-2 rounded-xl bg-[#0C0C0C] border border-white/20 text-center text-sm font-mono text-white focus:outline-none focus:border-[#D7E2EA]"
+                      />
+                    </div>
+
+                    {/* Submit Button */}
+                    <div className="pt-2">
+                      <button
+                        type="submit"
+                        disabled={status === 'loading'}
+                        className="w-full inline-flex items-center justify-center rounded-full px-8 py-4 text-sm sm:text-base font-medium uppercase tracking-widest text-white transition-all duration-300 hover:scale-[1.02] active:scale-98 outline outline-2 outline-white -outline-offset-[3px] select-none cursor-pointer disabled:opacity-50"
+                        style={{
+                          background: 'linear-gradient(123deg, #18011F 7%, #B600A8 37%, #7621B0 72%, #BE4C00 100%)',
+                          boxShadow: '0px 4px 4px rgba(181, 1, 167, 0.25), 4px 4px 12px #7721B1 inset',
+                        }}
+                      >
+                        {status === 'loading' ? (
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            <span>Transmitting...</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <Send className="w-4 h-4" />
+                            <span>Dispatch Message</span>
+                          </div>
+                        )}
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </div>
 
             </div>
-          </motion.div>
-
-        </div>
-
+          </div>
+        </FadeIn>
       </div>
     </section>
   );

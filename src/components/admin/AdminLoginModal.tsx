@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
-import { Lock, KeyRound, AlertCircle, X, ShieldCheck, Eye, EyeOff } from 'lucide-react';
+import { Lock, KeyRound, AlertCircle, X, Eye, EyeOff } from 'lucide-react';
 
 interface AdminLoginModalProps {
   isOpen: boolean;
@@ -38,34 +38,33 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ isOpen, onClos
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-      <div className="relative w-full max-w-md bg-slate-900 border border-slate-700/90 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6">
-        
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md font-['Kanit',sans-serif]">
+      <div className="relative w-full max-w-md bg-[#0C0C0C] border-2 border-[#D7E2EA] rounded-[36px] sm:rounded-[44px] shadow-[0_25px_70px_rgba(0,0,0,0.95)] p-6 sm:p-8 space-y-6 text-[#D7E2EA]">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+          className="absolute top-5 right-5 p-2 rounded-full text-[#D7E2EA]/60 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           aria-label="Close modal"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-cyan-950 border border-cyan-500/40 text-cyan-400 flex items-center justify-center mx-auto shadow-lg shadow-cyan-500/20">
+        <div className="text-center space-y-2 pt-2">
+          <div className="w-14 h-14 rounded-full border-2 border-[#D7E2EA] text-[#D7E2EA] flex items-center justify-center mx-auto shadow-lg shadow-black/50">
             <Lock className="w-6 h-6" />
           </div>
-          <h2 className="text-xl font-bold text-white font-heading">
-            Admin CMS Authentication
+          <h2 className="text-2xl font-black uppercase text-white tracking-tight hero-heading">
+            Admin CMS Portal
           </h2>
-          <p className="text-xs text-slate-400">
-            Enter authorized master credential to access portfolio configuration and inbox.
+          <p className="text-xs text-[#BBCCD7]/70 font-light max-w-xs mx-auto">
+            Authorized administrative dashboard for managing Zubair.dev portfolio content.
           </p>
         </div>
 
         {/* Error notification */}
         {error && (
-          <div className="p-3 rounded-xl bg-rose-950/80 border border-rose-800/60 text-rose-200 text-xs flex items-center gap-2">
+          <div className="p-3.5 rounded-2xl bg-rose-950/80 border border-rose-800/60 text-rose-200 text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
             <span>{error}</span>
           </div>
@@ -74,11 +73,11 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ isOpen, onClos
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5 text-left">
-            <label htmlFor="admin-password" className="text-xs font-semibold text-slate-300">
+            <label htmlFor="admin-password" className="text-xs font-medium uppercase tracking-wider text-[#BBCCD7]">
               Administrative Password
             </label>
             <div className="relative">
-              <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <KeyRound className="w-4 h-4 text-[#D7E2EA]/50 absolute left-4 top-1/2 -translate-y-1/2" />
               <input
                 id="admin-password"
                 type={showPassword ? 'text' : 'password'}
@@ -86,42 +85,25 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ isOpen, onClos
                 placeholder="Enter password..."
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-950 border border-slate-700/80 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 font-mono"
+                className="w-full pl-11 pr-11 py-3 rounded-2xl bg-[#141414] border border-[#D7E2EA]/30 text-xs sm:text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#D7E2EA] font-mono transition-colors"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-[#D7E2EA]/50 hover:text-white cursor-pointer"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
-            </div>
-            <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-              <span>Demo Master Credential:</span>
-              <button
-                type="button"
-                onClick={() => setPassword('zubair2026')}
-                className="text-cyan-400 hover:underline font-mono"
-              >
-                zubair2026 (fill)
               </button>
             </div>
           </div>
 
           <button
             type="submit"
-            className="w-full py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/20 transition-all cursor-pointer"
+            className="w-full py-3.5 rounded-full text-xs sm:text-sm font-medium uppercase tracking-widest text-[#0C0C0C] bg-[#D7E2EA] hover:bg-white transition-all shadow-[0_0_20px_rgba(215,226,234,0.3)] hover:scale-[1.02] active:scale-[0.98] font-['Kanit',sans-serif] cursor-pointer"
           >
-            Authenticate &amp; Launch Dashboard
+            Authorize Access
           </button>
         </form>
-
-        <div className="pt-2 text-center">
-          <span className="text-[11px] text-slate-500 flex items-center justify-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            Protected by Session Authorization &amp; Local Storage Persistence
-          </span>
-        </div>
       </div>
     </div>
   );
