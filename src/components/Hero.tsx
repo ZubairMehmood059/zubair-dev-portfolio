@@ -60,7 +60,7 @@ export const Hero: React.FC<HeroProps> = () => {
           <div className="relative group overflow-hidden rounded-t-[90px] sm:rounded-t-[125px] md:rounded-t-[160px] rounded-b-xl sm:rounded-b-2xl border border-[#D7E2EA]/30 bg-gradient-to-b from-[#181A1F] via-[#101216] to-[#0C0C0C] p-1.5 sm:p-2 shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_35px_rgba(187,204,215,0.12)] transition-all duration-500 hover:border-[#D7E2EA]/60 hover:shadow-[0_30px_70px_rgba(0,0,0,0.98),0_0_50px_rgba(187,204,215,0.22)]">
             <div className="relative overflow-hidden rounded-t-[85px] sm:rounded-t-[120px] md:rounded-t-[155px] rounded-b-lg aspect-[3/4]">
               <img
-                src="/assets/aistudio/WhatsApp_Image_2025-12-17__df3b65fc.jpg"
+                src="/images/zubair-portrait.jpg"
                 alt="Zubair - Software Engineer"
                 className="w-full h-full object-cover object-center select-none pointer-events-none transition-transform duration-700 group-hover:scale-105"
                 draggable={false}
